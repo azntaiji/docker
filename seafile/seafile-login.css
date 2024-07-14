@@ -1,0 +1,204 @@
+/* ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+   ┃                                                   ┃
+   ┃   DOCUMENT INFORMATION                   
+   ┃   - Document: Seafile Theme            
+   ┃   - Version:  1.1.0                      
+   ┃   - Author:   Zach Taiji                 
+   ┃                                                   ┃
+   ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛ */
+
+/* =====================================================
+   Section comment block
+   ===================================================== */
+
+/* Sub-section comment block
+   ----------------------------------------------------- */
+
+/**
+ * Short description using Doxygen-style comment format
+ *
+ * The first sentence of the long description starts here and 
+ * continues on this line for a while finally concluding here
+ * at the end of this paragraph.
+ *
+ * The long description is ideal for more detailed explanations and
+ * documentation. It can include example HTML, URLs, or any other information
+ * that is deemed necessary or useful.
+ *
+ * @tag This is a tag named 'tag'
+ *
+ * TODO: This is a todo statement that describes an atomic task to be completed
+ *   at a later date. It wraps after 80 characters and following lines are
+ *   indented by 2 spaces.
+ */
+
+/* Basic comment */
+/* ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+   ┃                                                   ┃
+   ┃   CSS DIRECTORY
+   ┃   1. VARS AND FONTS
+   ┃   2. LOGIN PANEL              
+   ┃   #. SIDEBAR       
+   ┃                                                   ┃
+   ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛ */
+
+/* =====================================================
+    1. VARS AND FONTS
+   ===================================================== */
+
+/* Set color variables
+   ----------------------------------------------------- */
+
+:root {
+    /* Neutral */
+    --dark-neutral-foreground: #F8F8F2;
+    --neutral-foreground: #111111;
+    --neutral-background-lighter: #2A2936;
+    --neutral-background: #22212C;
+    --neutral-background-darker: #151320;
+    --neutral-background-darkest: #0B0A10;
+    --neutral-bg-sidebar: #F8F7F2;
+    --neutral-bg-main: #FFFFFF;
+    --neutral-border-light: #E2E2E2;
+    --neutral-grey: #B3B3B3;
+    --neutral-dim: #B2B2B2;
+    --neutral-subdued: #777777;
+
+    /* Primary */
+    --primary-accent-dark: #9E7046;
+    --primary-accent: #DA9D65;
+    --primary-active-darker: #2B343B;
+    --primary-active-dark: #414D58;
+    --primary-active: #708CA9;
+    --primary-active-light: #91A6BD;
+
+
+    --primary-purple: #9580FF;
+    --primary-purple-dark: #7970A9;
+    --primary-purple-darker: #454158;
+    --primary-purple-darkest: #2B2640;
+
+    /* Secondary */
+    --secondary-pink: #FF80BF;
+    --secondary-cyan: #80FFEA;
+    --secondary-yellow: #FFFF80;
+    --secondary-orange: #FFCA80;
+    --secondary-green: #8AFF80;
+    --secondary-red: #FF9580;
+}
+
+/* =====================================================
+    2. LOGIN PANEL
+   ===================================================== */
+
+div.login-panel {
+    background: var(--neutral-background);
+    border-radius: 3px;
+    border: 1px solid var(--primary-purple-darker);
+    padding: 20px 35px;
+    width: 342px;
+    margin: 0 auto;
+    box-shadow: 1px 4px 2px 1px rgba(0, 0, 0, 0.10);
+
+    /* paragraph/small */
+    font-family: JetBrains Mono;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 32px; /* 266.667% */
+}
+
+div.login-panel a,.checkbox-label.remember .vam {
+    color: var(--primary-purple-darker);
+}
+
+h1.login-panel-hd {
+    font-size: 21px;
+    font-weight: 800;
+    line-height: 150%; /* 31.5px */
+    text-align: center;
+    /* margin: 5px 0 15px; */
+    color: var(--dark-neutral-foreground);
+    font-style: normal;
+}
+
+div.login-panel .input {
+    margin: 0;
+    border: 1px solid var(--primary-purple-darker);
+    background: var(--neutral-background-darker);
+    padding: 2px 13px;
+    height: 32px;
+    width: 246px;
+    color: var(--secondary-cyan);
+}
+
+div.login-panel .btn {
+    font-weight: 700;
+    border: 1px solid var(--primary-purple-darker);
+    padding: 0.125rem 0.8125rem;
+    font-size: 1rem;
+    line-height: 2rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+div.login-panel .btn-primary {
+    color: var(--neutral-background);
+    background-color: var(--secondary-pink);
+    border-color: var(--primary-purple-darker);
+}
+
+div.login-panel .btn-primary:hover {
+    color: var(--secondary-pink);
+    background-color: var(--neutral-background);
+    border-color: var(--secondary-pink);
+}
+
+div.login-panel .btn-primary:active {
+    color: var(--secondary-pink);
+    background-color: var(--neutral-background);
+    border-color: var(--secondary-pink);
+}
+
+
+
+/* =====================================================
+    #. SIDEBAR
+   ===================================================== */
+
+.side-nav-con .toggle-icon {
+    display: inline;
+    padding-left: 5px;
+}
+
+div.side-panel-north {
+    background: var(--primary-active-darker);
+    border-bottom: 1px solid var(--primary-active-dark);
+}
+
+div.side-panel-center {
+    background: var(--primary-active-darker);  
+}
+
+div.side-panel-center h3 {
+    color: var(--neutral-bg-main);
+    /* seafile/sidebar/heading */
+    font-family: Figtree;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+div.side-panel-center span.nav-text {
+    color: var(--primary-active-light);
+    /* seafile/sidebar/text */
+    font-family: Figtree;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+div.side-panel-center li a > span:first-of-type {
+    color: var(--primary-accent);
+}

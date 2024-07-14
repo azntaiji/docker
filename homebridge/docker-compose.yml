@@ -1,0 +1,26 @@
+version: '2'
+services:
+  homebridge:
+    image: oznu/homebridge:latest
+    restart: always
+    network_mode: host
+    volumes:
+      - ./data:/homebridge:rw
+    logging:
+      driver: json-file
+      options:
+        max-size: "10mb"
+        max-file: "1"
+    ports:
+      - 8581
+    expose:
+      - 80
+      - 8080
+      - 443
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homebridge.rule=Host(`homebridge.zachtaiji.com`)"
+      - "traefik.http.routers.homebridge.service=homebridge-service"
+      - "traefik.http.routers.homebridge.entrypoints=websecure"
+      - "traefik.http.routers.homebridge.tls.certresolver=myresolver"
+      - "traefik.http.services.homebridge-service.loadbalancer.server.port=8581"

@@ -1,0 +1,137 @@
+---
+services:
+  seatable-server:
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:4.4.9}
+    restart: unless-stopped
+    container_name: seatable-server
+    volumes:
+      - "./data:/shared"
+      - type: bind
+        source: "./seatable-license.txt"
+        target: "/shared/seatable/seatable-license.txt"
+        read_only: ${SEATABLE_LICENSE_FORCE_READ_ONLY:-false}
+    ports:
+      - 80
+      - 443
+    environment:
+      - DB_HOST=mariadb
+      - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
+      - SEATABLE_SERVER_PROTOCOL=${SEATABLE_SERVER_PROTOCOL:-https}
+      - SEATABLE_ADMIN_EMAIL=${SEATABLE_ADMIN_EMAIL:?Variable is not set or empty}
+      - SEATABLE_ADMIN_PASSWORD=${SEATABLE_ADMIN_PASSWORD:?Variable is not set or empty}
+      - TIME_ZONE=${TIME_ZONE}
+      - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://python-scheduler}
+      - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN:-}
+      - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+      - SEATABLE_EMAIL_USE_TLS=${SEATABLE_EMAIL_USE_TLS:-}
+      - SEATABLE_EMAIL_HOST=${SEATABLE_EMAIL_HOST:-}
+      - SEATABLE_EMAIL_HOST_USER=${SEATABLE_EMAIL_HOST_USER:-}
+      - SEATABLE_EMAIL_HOST_PASSWORD=${SEATABLE_EMAIL_HOST_PASSWORD:-}
+      - SEATABLE_EMAIL_PORT=${SEATABLE_EMAIL_PORT:-}
+      - SEATABLE_DEFAULT_FROM_EMAIL=${SEATABLE_DEFAULT_FROM_EMAIL:-}
+      - SEATABLE_SERVER_EMAIL=${SEATABLE_SERVER_EMAIL:-}
+      - SEATABLE_SHOW_TEMPLATES_LINK=${SEATABLE_SHOW_TEMPLATES_LINK:-}
+      - SEATABLE_TEMPLATE_BASE_API_TOKEN=${SEATABLE_TEMPLATE_BASE_API_TOKEN:-}
+      - SEATABLE_TEMPLATE_TABLE_NAME=${SEATABLE_TEMPLATE_TABLE_NAME:-}
+      - SEATABLE_ENABLE_CREATE_BASE_FROM_TEMPLATE=${SEATABLE_ENABLE_CREATE_BASE_FROM_TEMPLATE:-}
+      - SEATABLE_HELP_LINK=${SEATABLE_HELP_LINK:-https://docs.seatable.io}
+      - SEATABLE_LOG_LEVEL=${SEATABLE_LOG_LEVEL:-INFO}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.seatable.entrypoints=web
+      - traefik.http.routers.seatable.rule=Host(`seatable.zachtaiji.com`)
+      - traefik.http.routers.seatable.middlewares=https_redirect@docker,non_www@docker
+      - traefik.http.routers.seatable-secure.entrypoints=websecure
+      - traefik.http.routers.seatable-secure.rule=Host(`seatable.zachtaiji.com`)
+      - traefik.http.routers.seatable-secure.tls=true
+      - traefik.http.routers.seatable-secure.tls.certresolver=myresolver
+      - traefik.docker.network=reverse-proxynet
+
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      memcached:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - reverse-proxynet
+      - backend-seatable-net
+    # healthcheck specifically for dtable-web
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8000 || exit 1"]
+      interval: 20s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
+
+  mariadb:
+    image: ${SEATABLE_DB_IMAGE:-mariadb:10.11.7-jammy}
+    restart: unless-stopped
+    container_name: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      - MYSQL_LOG_CONSOLE=true
+      - MARIADB_AUTO_UPGRADE=1
+    volumes:
+      - "./mysql:/var/lib/mysql"
+    networks:
+      - backend-seatable-net
+      - reverse-proxynet
+    ports:
+      - 3306:3306
+    labels:
+      - "traefik.enable=true"
+      - "traefik.tcp.routers.mardiadb.rule=HostSNI(`mariadb.zachtaiji.com`)"
+      - "traefik.tcp.services.mariadb.loadbalancer.server.port=3306"
+      - "traefik.tcp.routers.mariadb.entrypoints=mariadb"
+      - "traefik.tcp.routers.mariadb.tls=true"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "/usr/local/bin/healthcheck.sh",
+          "--connect",
+          "--mariadbupgrade",
+          "--innodb_initialized",
+        ]
+      interval: 20s
+      retries: 3
+      start_period: 30s
+      timeout: 10s
+      # On older database containers without healthcheck users present you might need to create them manually,
+      # otherwise the container stays unhealthy.
+      # more info at https://admin.seatable.io/upgrade/extra-upgrade-notice/
+
+  memcached:
+    image: ${SEATABLE_MEMCACHED_IMAGE:-memcached:1.6.27-bookworm}
+    restart: unless-stopped
+    container_name: memcached
+    entrypoint: memcached -m 256
+    networks:
+      - backend-seatable-net
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 2 bash -c '</dev/tcp/localhost/11211'"]
+      interval: 20s
+      retries: 3
+      timeout: 5s
+
+  redis:
+    image: ${SEATABLE_REDIS_IMAGE:-redis:7.2.4-bookworm}
+    restart: unless-stopped
+    container_name: redis
+    networks:
+      - backend-seatable-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 20s
+      retries: 3
+      timeout: 5s
+
+networks:
+  reverse-proxynet:
+    name: reverse-proxynet
+    external: true
+  backend-seatable-net:
+    name: backend-seatable-net

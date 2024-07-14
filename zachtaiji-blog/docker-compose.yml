@@ -1,0 +1,39 @@
+services:
+  ghost:
+    container_name: zachtaiji-com-blog
+    image: ghost:latest
+    restart: always
+    volumes:
+      - ./ghost:/var/lib/ghost/content:rw
+    external_links:
+      - mysql-db
+    environment:
+      - database__client=mysql
+      - database__connection__host=mysql-db
+      - database__connection__user=root
+      - database__connection__password=${DB_ROOT_PASSWORD}
+      - database__connection__database=ghost_zachtaiji
+      - url=https://zachtaiji.com
+    ports:
+      - 2368
+    networks:
+      - reverse-proxynet
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ghost.rule=Host(`zachtaiji.com`) || Host(`www.zachtaiji.com`)"
+      - "traefik.http.routers.ghost.entrypoints=websecure"
+      - "traefik.http.routers.ghost.tls.certresolver=myresolver"
+      - "traefik.http.services.ghost.loadbalancer.server.port=2368"
+      - "traefik.http.routers.ghost.middlewares=https_redirect@docker,non_www@docker"
+      #Azntaiji website SSL and redirects
+      - "traefik.http.routers.azntaiji-website.rule=Host(`azntaiji.com`) || Host(`www.azntaiji.com`)"
+      - "traefik.http.routers.azntaiji-website.entrypoints=web,websecure"
+      - "traefik.http.routers.azntaiji-website.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.azntaiji-website.redirectregex.regex=^http://azntaiji.com/(.*)"
+      - "traefik.http.middlewares.azntaiji-website.redirectregex.replacement=http://zachtaiji.com/$${1}"
+      - "traefik.http.middlewares.azntaiji-website.redirectregex.permanent=true"
+      #- "traefik.http.routers.azntaiji-website.middlewares=https_redirect@docker,non_www@docker"
+networks:
+  reverse-proxynet:
+    name: reverse-proxynet
+    external: true

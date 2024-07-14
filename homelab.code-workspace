@@ -1,0 +1,34 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/.git": false,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/CVS": true,
+			"**/.DS_Store": true,
+			"**/Thumbs.db": true,
+			".vscode": true,
+			"**/.aspnet": true,
+			"**/.gnupg": true,
+			"**/.gnupg/private-keys-v1.d": true,
+			"**/.bash_history": true,
+			"**/.bashrc": true,
+			"**/.bash_logout": true,
+			"**/.gitconfig": false,
+			"_inactive": true
+		},
+		"explorerExclude.backup": {},
+		"files.watcherExclude": {
+			"**/.git/objects/**": true,
+			"**/.git/subtree-cache/**": true,
+			"**/node_modules/*/**": true,
+			"**/.hg/store/**": true
+		},
+		"editor.fontFamily": "'JetBrains Mono'"
+	}
+}

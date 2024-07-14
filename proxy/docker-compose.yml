@@ -1,0 +1,52 @@
+services:
+  traefik:
+    image: traefik:2.9
+    container_name: proxy
+    command:
+      - "--api=true"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entryPoints.smtp.address=:25"
+      - "--entryPoints.smtp-ssl.address=:465"
+      - "--entryPoints.imap-ssl.address=:993"
+      - "--entryPoints.sieve.address=:4190"
+      - "--entryPoints.mariadb.address=:3306"
+      - "--entryPoints.mysql.address=:3307"
+      - "--entrypoints.seafile.address=:8000"
+      - "--entrypoints.seafhttp.address=:8082"
+      - "--entrypoints.n8n.address=:5678"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=zach@steelhead.design"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "4190:4190"
+      - "8080:8080"
+      - "80:80"
+      - "443:443"
+      - "8000:8000"
+      - "8082:8082"
+    expose:
+      - "22:22"
+    volumes:
+      - ./letsencrypt:/letsencrypt:rw
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    networks:
+      - reverse-proxynet
+    labels:
+      - traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`) 
+      - traefik.http.routers.http_catchall.entrypoints=web 
+      - traefik.http.routers.http_catchall.middlewares=https_redirect
+      - traefik.http.middlewares.https_redirect.redirectscheme.scheme=https
+      - traefik.http.middlewares.https_redirect.redirectscheme.permanent=true  
+      - traefik.http.middlewares.non_www.redirectregex.regex=^(http|https)?://(?:www\.)?(.+)
+      - traefik.http.middlewares.non_www.redirectregex.replacement=https://$${2} 
+      - traefik.http.middlewares.non_www.redirectregex.permanent=true
+networks:
+  reverse-proxynet:
+    name: reverse-proxynet

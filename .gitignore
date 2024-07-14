@@ -1,0 +1,9 @@
+.archived/
+**/.env
+**/data/
+**/mysql/
+jellyfin/cache/
+jellyfin/config/
+proxy/letsencrypt/
+seatable/seatable-license.txt
+zachtaiji-blog/ghost/

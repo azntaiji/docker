@@ -1,0 +1,22 @@
+services:
+    static:
+        container_name: static
+        image: nginx:alpine
+        volumes:
+          - /mnt/static:/usr/share/nginx/html:rw
+        restart: unless-stopped
+        networks:
+        - reverse-proxynet
+        labels:
+            - traefik.enable=true
+            # Match on the hostname and the path
+            - traefik.http.routers.static-fileserver.rule=Host(`static.zachtaiji.com`)
+            - traefik.http.routers.static-fileserver.entrypoints=web,websecure
+            - traefik.http.routers.static-fileserver.tls.certresolver=myresolver
+            #- traefik.http.services.static-fileserver.loadbalancer.server.port=4000
+            # tell Traefik which middlewares we want to use on this container
+            - traefik.http.routers.static-fileserver.middlewares=https_redirect@docker,non_www@docker
+networks:
+  reverse-proxynet:
+    name: reverse-proxynet
+    external: true
