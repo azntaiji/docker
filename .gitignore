@@ -1,9 +1,12 @@
 .archived/
 **/.env
 **/data/
-**/mysql/
+mysql/data/
+seafile/mysql/
+seatable/mysql/
 jellyfin/cache/
 jellyfin/config/
 proxy/letsencrypt/
 seatable/seatable-license.txt
 zachtaiji-blog/ghost/
+.vscode/

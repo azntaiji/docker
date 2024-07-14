@@ -1,0 +1,24 @@
+services:
+  mysql-db:
+    container_name: mysql-db
+    image: mysql:8.0.31
+    restart: always
+    #command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD} 
+    volumes:
+      - ./data:/var/lib/mysql:rw
+    networks:
+      - reverse-proxynet
+    labels:
+      - "traefik.enable=true"
+      - "traefik.tcp.routers.mysql.rule=HostSNI(`mysql.zachtaiji.com`)"
+      - "traefik.tcp.services.mysql.loadbalancer.server.port=3306"
+      - "traefik.tcp.routers.mysql.entrypoints=mysql"
+      - "traefik.tcp.routers.mysql.tls=true"
+    ports:
+      - 3307:3306
+networks:
+  reverse-proxynet:
+    name: reverse-proxynet
+    external: true
