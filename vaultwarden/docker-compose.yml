@@ -1,0 +1,29 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: always
+    environment:
+      DOMAIN: "https://vaultwarden.zachtaiji.com"  # required when using a reverse proxy; your domain; vaultwarden needs to know it's https to work properly with attachments
+      SIGNUPS_ALLOWED: "false" # Deactivate this with "false" after you have created your account so that no strangers can register
+    volumes:
+      - ./data:/data # the path before the : can be changed
+    ports:
+      - 11001:80 # you can replace the 11001 with your preferred port
+    networks:
+      - reverse-proxynet
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.vaultwarden.entrypoints=web
+      - traefik.http.routers.vaultwarden.rule=Host(`vaultwarden.zachtaiji.com`)
+      - traefik.http.services.vaultwarden.loadbalancer.server.port=80
+      - traefik.http.routers.vaultwarden.middlewares=https_redirect@docker,non_www@docker
+      - traefik.http.routers.vaultwarden-secure.entrypoints=websecure
+      - traefik.http.routers.vaultwarden-secure.rule=Host(`vaultwarden.zachtaiji.com`)
+      - traefik.http.routers.vaultwarden-secure.tls=true
+      - traefik.http.routers.vaultwarden-secure.tls.certresolver=myresolver
+      - traefik.docker.network=reverse-proxynet
+networks:
+  reverse-proxynet:
+    name: reverse-proxynet
+    external: true

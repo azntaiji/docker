@@ -17,6 +17,8 @@ services:
       - "--entryPoints.mysql.address=:3307"
       - "--entrypoints.seafile.address=:8000"
       - "--entrypoints.seafhttp.address=:8082"
+      - "--entrypoints.postgres.address=:5432"
+      - "--entrypoints.teableapi.address=:3000"
       - "--entrypoints.n8n.address=:5678"
       - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"

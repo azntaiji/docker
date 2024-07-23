@@ -8,5 +8,8 @@ jellyfin/cache/
 jellyfin/config/
 proxy/letsencrypt/
 seatable/seatable-license.txt
+seatable-compose/seatable-license.txt
+seatable-compose/mysql/*
 zachtaiji-blog/ghost/
 .vscode/
+teable/teable-db/
