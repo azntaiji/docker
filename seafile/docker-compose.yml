@@ -4,7 +4,7 @@ services:
     container_name: seafile-db
     #command: ['--transaction-isolation=READ-COMMITTED', '--binlog-format=ROW', '--innodb_read_only_compressed=OFF']
     environment:
-      - MYSQL_ROOT_PASSWORD=$SEAFILE_DB_PASSWORD
+      - MYSQL_ROOT_PASSWORD=${SEAFILE_DB_PASSWORD}
       - MYSQL_LOG_CONSOLE=true
       - MARIADB_AUTO_UPGRADE=1
     volumes:
@@ -43,7 +43,7 @@ services:
       - ./data/seafile-data:/shared
     environment:
       - DB_HOST=seafile-db
-      - DB_ROOT_PASSWD=$SEAFILE_DB_PASSWORD
+      - DB_ROOT_PASSWD=${SEAFILE_DB_PASSWORD}
       - TIME_ZONE=America/Los_Angeles
       - SEAFILE_ADMIN_EMAIL=zach@azntaiji.com
       - SEAFILE_ADMIN_PASSWORD=$SF_ADMIN_PWD
@@ -68,6 +68,39 @@ services:
       - traefik.http.routers.seafile-secure.tls=true
       - traefik.http.routers.seafile-secure.tls.certresolver=myresolver
       - traefik.docker.network=reverse-proxynet
+  sdoc-server:
+    image: seafileltd/sdoc-server:latest
+    container_name: sdoc-server
+    ports:
+      #- 80:80
+      # - 443:443
+      - 7070:7070
+      - 8888:8888
+    volumes:
+      - ./data/seadoc-data/:/shared
+    environment:
+      - DB_HOST=seafile-db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWD=${SEAFILE_DB_PASSWORD}
+      - DB_NAME=sdoc_db      
+      - TIME_ZONE=America/Los_Angeles # Optional, default is UTC. Should be uncomment and set to your local time zone.
+      - SDOC_SERVER_LETSENCRYPT=false # Whether to use https or not.
+      - SDOC_SERVER_HOSTNAME=sdoc-server.zachtaiji.com # Specifies your host name if https is enabled.
+      - SEAHUB_SERVICE_URL=https://files.zachtaiji.com
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.sdoc-server.entrypoints=web
+      - traefik.http.routers.sdoc-server.rule=Host(`sdoc-server.zachtaiji.com`)
+      - traefik.http.routers.sdoc-server.middlewares=https_redirect@docker,non_www@docker
+      - traefik.http.routers.sdoc-server-secure.entrypoints=websecure
+      - traefik.http.routers.sdoc-server-secure.rule=Host(`sdoc-server.zachtaiji.com`)
+      - traefik.http.routers.sdoc-server-secure.tls=true
+      - traefik.http.routers.sdoc-server-secure.tls.certresolver=myresolver
+      - traefik.docker.network=reverse-proxynet
+    networks:
+      - seafile-internal
+      - reverse-proxynet
 networks:
   reverse-proxynet:
     name: reverse-proxynet
