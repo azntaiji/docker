@@ -1,6 +1,7 @@
 services:
   n8n:
     user: root
+    container_name: n8n
     image: n8nio/n8n
     restart: always
     ports:
