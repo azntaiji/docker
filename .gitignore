@@ -1,5 +1,6 @@
 .archived/
 **/.env
+**/*.env
 **/data/
 mysql/data/
 seafile/mysql/
@@ -13,3 +14,8 @@ seatable-compose/mysql/*
 zachtaiji-blog/ghost/
 .vscode/
 teable/teable-db/
+onlyoffice/_config/
+onlyoffice/cache/
+onlyoffice/logs/
+onlyoffice/config/
+homepage/config/logs
