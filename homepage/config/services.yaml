@@ -1,0 +1,117 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/latest/configs/services
+
+- Network:
+        - Traefik:
+            icon: traefik.svg
+            href: http://216.243.43.238:8080/dashboard/#/
+            description: reverse proxy server
+            server: my-docker
+            container: proxy
+            widget:
+                type: traefik
+                url: http://216.243.43.238:8080
+        - CloudFlare:
+            href: https://www.cloudflare.com/
+            icon: cloudflare.svg
+            description: Domain and DNS management
+        - Cockpit:
+            href: https://zachtaiji.com:9090/system
+            icon: ubuntu
+            description: Remote Server Admin
+        - Router:
+            href: http://192.168.1.1
+            icon: router
+            description: Router Login
+- Databases:
+        - Mariadb:
+            icon: mariadb.svg
+            server: my-docker
+            container: mariadb
+        - Mysql:
+            icon: mysql.svg
+            server: my-docker
+            container: mysql-db
+        - Postgres:
+            icon: postgres.svg
+            server: my-docker
+            container: postgres
+- Data Science:
+        - Seatable:
+            icon: /icons/seatable.png
+            href: https://seatable.zachtaiji.com
+            description: no-code db
+            server: my-docker
+            container: seatable-server
+        - Teable:
+            icon: /icons/teable.svg
+            href: https://teable.zachtaiji.com
+            description: postgres no-code db
+            server: my-docker
+            container: teable
+        - Metabase:
+            icon: metabase
+            href: https://dashboard.zachtaiji.com
+            description: data viz
+            server: my-docker
+            container: metabase
+- Media:
+        - Seafile:
+            icon: seafile.svg
+            href: https://files.zachtaiji.com
+            description: cloud storage
+            server: my-docker
+            container: seafile
+        - Jellyfin:
+            icon: jellyfin.svg
+            href: https://movies.zachtaiji.com
+            description: movies & tv
+            server: my-docker
+            container: jellyfin
+            widget:
+                type: jellyfin
+                url: https://movies.zachtaiji.com
+                key: {{HOMEPAGE_VAR_JELLYFINKEY}}
+                enableBlocks: true # optional, defaults to false
+                enableNowPlaying: true # optional, defaults to true
+                enableUser: true # optional, defaults to false
+                showEpisodeNumber: true # optional, defaults to false
+                expandOneStreamToTwoRows: false # optional, defaults to true
+- Misc:
+        - n8n:
+            icon: n8n.svg
+            href: https://n8n.zachtaiji.com
+            description: automations
+            server: my-docker
+            container: n8n
+        - VaultWarden:
+            icon: vaultwarden.svg
+            href: https://vaultwarden.zachtaiji.com
+            description: password manager
+            server: my-docker
+            container: vaultwarden
+        - Homebridge:
+            icon: homebridge.svg
+            href: http://homebridge.zachtaiji.com:8581/login
+            description: smart home
+            server: my-docker
+            container: homebridge
+            widget:
+                type: homebridge
+                url: http://homebridge.zachtaiji.com:8581
+                username: azntaiji
+                password: {{HOMEPAGE_VAR_HOMEBRIDGEPW}}
+- Websites:
+        - Blog:
+            icon: si-ghost
+            href: https://zachtaiji.com
+            description: Zach Taiji blog
+            server: my-docker
+            container: zachtaiji-com-blog
+        - Static:
+            icon: si-filedotio
+            href: https://static.zachtaiji.com/
+            description: static fileserver
+            server: my-docker
+            container: static

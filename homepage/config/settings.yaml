@@ -1,0 +1,57 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/latest/configs/settings
+
+title: Zach's Homelab
+
+background:
+  image: https://images.unsplash.com/photo-1527348857765-589fb3b5d6f6
+  opacity: 30
+
+cardBlur: sm
+
+theme: dark
+
+color: gray
+
+useEqualHeights: true
+
+headerStyle: clean
+
+base: https://home.zachtaiji.com
+
+statusStyle: "dot"
+
+quicklaunch:
+  showSearchSuggestions: true
+  provider: google
+
+providers:
+  openweathermap: openweathermapapikey
+  weatherapi: weatherapiapikey
+
+layout:
+  Network:
+    style: row
+    columns: 4
+  Databases:
+    style: row
+    columns: 3
+  Data Science:
+    style: column
+    columns: 2
+  Media:
+    style: column
+    columns: 3
+  Misc:
+    style: column
+    columns: 3
+  Websites:
+    style: column
+    columns: 3
+  Metrics:
+    style: column
+    columns: 3
+  Lists:
+    style: column
+    columns: 3
