@@ -5,13 +5,13 @@
 - Network:
         - Traefik:
             icon: traefik.svg
-            href: http://216.243.43.238:8080/dashboard/#/
+            href: https://traefik.zachtaiji.com/dashboard/#/
             description: reverse proxy server
             server: my-docker
             container: proxy
             widget:
                 type: traefik
-                url: http://216.243.43.238:8080
+                url: https://traefik.zachtaiji.com
         - CloudFlare:
             href: https://www.cloudflare.com/
             icon: cloudflare.svg
