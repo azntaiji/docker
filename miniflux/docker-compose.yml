@@ -1,0 +1,34 @@
+services:
+  miniflux:
+    container_name: miniflux
+    image: miniflux/miniflux:latest
+    external_links:
+      - postgres
+    expose:
+      - 8080
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgres://${PG_USER_MINIFLUX}:${PG_PW_MINIFLUX}@postgres.zachtaiji.com/miniflux?sslmode=disable
+      - RUN_MIGRATIONS=1
+      - CREATE_ADMIN=1
+      - ADMIN_USERNAME=${MINIFLUX_ADMIN}
+      - ADMIN_PASSWORD=${MINIFLUX_PW}
+      - BASE_URL=https://reader.zachtaiji.com
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.miniflux.entrypoints=web
+      - traefik.http.routers.miniflux.rule=Host(`reader.zachtaiji.com`)
+      - traefik.http.services.miniflux.loadbalancer.server.port=8080
+      - traefik.http.routers.miniflux.middlewares=https_redirect@docker,non_www@docker
+      - traefik.http.routers.miniflux-secure.entrypoints=websecure
+      - traefik.http.routers.miniflux-secure.rule=Host(`reader.zachtaiji.com`)
+      - traefik.http.routers.miniflux-secure.tls=true
+      - traefik.http.routers.miniflux-secure.tls.certresolver=myresolver
+      - traefik.docker.network=reverse-proxynet
+    networks:
+      - reverse-proxynet
+networks:
+  reverse-proxynet:
+    name: reverse-proxynet
+    external: true
