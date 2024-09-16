@@ -9,10 +9,6 @@ services:
       - "--providers.docker.exposedbydefault=true"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      - "--entryPoints.smtp.address=:25"
-      - "--entryPoints.smtp-ssl.address=:465"
-      - "--entryPoints.imap-ssl.address=:993"
-      - "--entryPoints.sieve.address=:4190"
       - "--entryPoints.mariadb.address=:3306"
       - "--entryPoints.mysql.address=:3307"
       - "--entrypoints.seafile.address=:8000"
@@ -28,12 +24,8 @@ services:
       - "--certificatesresolvers.myresolver.acme.email=zach@steelhead.design"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
-      - "4190:4190"
-      - "8080:8080"
       - "80:80"
       - "443:443"
-      - "8000:8000"
-      - "8082:8082"
     expose:
       - "22:22"
     volumes:
@@ -59,7 +51,6 @@ services:
       - traefik.http.routers.traefik-dash-secure.rule=Host(`traefik.zachtaiji.com`)
       - traefik.http.routers.traefik-dash-secure.tls=true
       - traefik.http.routers.traefik-dash-secure.tls.certresolver=myresolver
-      #- traefik.docker.network=reverse-proxynet
 networks:
   reverse-proxynet:
     name: reverse-proxynet
