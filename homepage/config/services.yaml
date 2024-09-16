@@ -24,19 +24,6 @@
             href: http://192.168.1.1
             icon: router
             description: Router Login
-- Databases:
-        - Mariadb:
-            icon: mariadb.svg
-            server: my-docker
-            container: mariadb
-        - Mysql:
-            icon: mysql.svg
-            server: my-docker
-            container: mysql-db
-        - Postgres:
-            icon: postgres.svg
-            server: my-docker
-            container: postgres
 - Data Science:
         - Seatable:
             icon: /icons/seatable.png
@@ -91,17 +78,6 @@
             description: password manager
             server: my-docker
             container: vaultwarden
-        - Homebridge:
-            icon: homebridge.svg
-            href: http://homebridge.zachtaiji.com:8581/login
-            description: smart home
-            server: my-docker
-            container: homebridge
-            widget:
-                type: homebridge
-                url: http://homebridge.zachtaiji.com:8581
-                username: azntaiji
-                password: {{HOMEPAGE_VAR_HOMEBRIDGEPW}}
 - Websites:
         - Blog:
             icon: si-ghost
@@ -115,3 +91,12 @@
             description: static fileserver
             server: my-docker
             container: static
+- Databases:
+        - Mariadb:
+            icon: mariadb.svg
+            server: my-docker
+            container: mariadb
+        - Mysql:
+            icon: mysql.svg
+            server: my-docker
+            container: mysql-db

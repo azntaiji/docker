@@ -34,9 +34,6 @@ layout:
   Network:
     style: row
     columns: 4
-  Databases:
-    style: row
-    columns: 3
   Data Science:
     style: column
     columns: 2
@@ -49,6 +46,9 @@ layout:
   Websites:
     style: column
     columns: 3
+  Databases:
+    style: row
+    columns: 2
   Metrics:
     style: column
     columns: 3
