@@ -1,0 +1,42 @@
+services:
+  minecraft-server:
+    image: 05jchambers/legendary-minecraft-geyser-floodgate:latest
+    container_name: minecraft-server
+    restart: "unless-stopped"
+    ports:
+      - 25565:25565
+      - 19132:19132
+      - 19132:19132/udp
+      - 8123:8123
+    volumes:
+      - ./data:/minecraft
+    stdin_open: true # docker run -i
+    tty: true # docker run -t
+    entrypoint: [ "/bin/bash", "/scripts/start.sh" ]
+    # Environment variables
+    environment:
+      Port: "25565"
+      BedrockPort: "19132"
+      TZ: "America/Los_Angeles" # Timezone
+      #BackupCount: 10 # Number of rolling backups to keep
+      #MaxMemory: 2048 # Maximum memory usage for Java
+      #Version: 1.19.3 # Use custom version
+      #NoBackup: "plugins" # Optional folder to skip during backups
+      #NoPermCheck: "Y" # Optional flag to skip permissions check
+      #NoViaVersion: "Y" # Optional flag to disable ViaVersion plugin
+      #QuietCurl: "Y" # Optional flag to reduce curl log output by suppressing progress meterdocker compose p 
+    labels:
+        - traefik.enable=true
+        - traefik.http.routers.minecraft.entrypoints=mc1,mc2,mc3
+        - traefik.http.routers.minecraft.rule=Host(`mc.zachtaiji.com`)
+        #- traefik.http.services.minecraft.loadbalancer.server.port=80
+        - traefik.http.routers.minecraft.middlewares=non_www@docker
+        #- traefik.http.routers.minecraft-secure.tls=true
+        #- traefik.http.routers.minecraft-secure.tls.certresolver=myresolver
+        - traefik.docker.network=reverse-proxynet
+    networks:
+      - reverse-proxynet
+networks:
+  reverse-proxynet:
+    name: reverse-proxynet
+    external: true

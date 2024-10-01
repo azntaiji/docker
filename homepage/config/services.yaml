@@ -13,7 +13,7 @@
                 type: traefik
                 url: https://traefik.zachtaiji.com
         - CloudFlare:
-            href: https://www.cloudflare.com/
+            href: https://dash.cloudflare.com/
             icon: cloudflare.svg
             description: Domain and DNS management
         - Cockpit:
@@ -31,6 +31,12 @@
             description: no-code db
             server: my-docker
             container: seatable-server
+        - Nocodb:
+            icon: /icons/nocodb.svg
+            href: https://nocodb.zachtaiji.com
+            description: no-code db
+            server: my-docker
+            container: nocodb
         - Teable:
             icon: /icons/teable.svg
             href: https://teable.zachtaiji.com
@@ -66,6 +72,12 @@
                 showEpisodeNumber: true # optional, defaults to false
                 expandOneStreamToTwoRows: false # optional, defaults to true
 - Misc:
+        - Minecraft Server:
+            icon: minecraft.svg
+            href: https://mc.zachtaiji.com:19132
+            description: GeyserMC server
+            server: my-docker
+            container: minecraft-server
         - n8n:
             icon: n8n.svg
             href: https://n8n.zachtaiji.com
