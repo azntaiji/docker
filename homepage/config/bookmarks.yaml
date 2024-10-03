@@ -26,3 +26,41 @@
         - abbr: SH
           href: https://github.com/awesome-selfhosted/awesome-selfhosted
           icon: si-awesomelists
+- Personal Finance:
+    - YNAB:
+        - abbr: YN
+          href: https://app.ynab.com/
+          icon: /icons/ynab.svg
+    - SOFI:
+        - abbr: SO
+          href: https://www.sofi.com/my/money/account
+    - Chase Bank:
+        - abbr: CH
+          href: https://www.chase.com/
+    - Capital One:
+        - abbr: CO
+          href: https://www.capitalone.com/
+    - Fidelity:
+        - abbr: FI
+          href: https://www.fidelity.com/
+    - Betterment 401k:
+        - abbr: BM
+          href: https://wwws.betterment.com/app/login?return_to=/app/summary
+    - Vanguard:
+        - abbr: VG
+          href: https://investor.vanguard.com/home
+- Healthcare:
+    - Anthem:
+        - abbr: AN
+          href: https://www.anthem.com/login
+    - MyChart UW:
+        - abbr: UW
+          href: https://mychart.uwmedicine.org/prod01/Authentication/Login
+- Music:
+    - Guitar Tabs UltimateGuitar:
+        - abbr: GT
+          href: https://www.ultimate-guitar.com/forum/
+- Reading:
+    - Innoreader:
+        - abbr: IR
+          href: https://www.inoreader.com/dashboard

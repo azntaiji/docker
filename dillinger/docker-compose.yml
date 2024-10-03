@@ -1,0 +1,27 @@
+services:
+  dillinger:
+    build: .
+    container_name: dillinger
+    image: joemccann/dillinger
+    ports:
+      - "9000:9000"
+    environment:
+      - "BIND_ADDRESS=0.0.0.0"
+      - "PORT=9000"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.markdown.entrypoints=web
+      - traefik.http.routers.markdown.rule=Host(`markdown.zachtaiji.com`)
+      - traefik.http.services.markdown.loadbalancer.server.port=9000
+      - traefik.http.routers.markdown.middlewares=https_redirect@docker,non_www@docker
+      - traefik.http.routers.markdown-secure.entrypoints=websecure
+      - traefik.http.routers.markdown-secure.rule=Host(`markdown.zachtaiji.com`)
+      - traefik.http.routers.markdown-secure.tls=true
+      - traefik.http.routers.markdown-secure.tls.certresolver=myresolver
+      - traefik.docker.network=reverse-proxynet
+    networks:
+      - reverse-proxynet
+networks:
+  reverse-proxynet:
+    name: reverse-proxynet
+    external: true

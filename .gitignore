@@ -20,3 +20,4 @@ onlyoffice/cache/
 onlyoffice/logs/
 onlyoffice/config/
 homepage/config/logs
+dillinger/**/
