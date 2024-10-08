@@ -23,6 +23,7 @@ base: https://home.zachtaiji.com
 statusStyle: "dot"
 
 quicklaunch:
+  searchDescriptions: true
   showSearchSuggestions: true
   provider: google
 
@@ -31,27 +32,36 @@ providers:
   weatherapi: weatherapiapikey
 
 layout:
-  Network:
+  Arr Stack:
+    style: row
+    columns: 3
+  Media:
+    style: row
+    columns: 3
+  Other Apps:
     style: row
     columns: 4
-  Data Science:
+  Data Science & Analytics:
     style: column
     columns: 2
-  Media:
+  Networking:
     style: column
-    columns: 3
-  Misc:
+    columns: 1
+  Websites & Databases:
     style: column
-    columns: 3
-  Websites:
-    style: column
-    columns: 3
-  Databases:
-    style: row
-    columns: 2
-  Metrics:
-    style: column
-    columns: 3
+    columns: 1
   Lists:
-    style: column
+    style: row
     columns: 3
+  Personal Finance:
+    style: column
+    columns: 1
+  Healthcare:
+    style: column
+    columns: 1
+  Music:
+    style: column
+    columns: 1
+  Reading:
+    style: column
+    columns: 1

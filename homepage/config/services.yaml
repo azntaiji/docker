@@ -2,16 +2,20 @@
 # For configuration options and examples, please see:
 # https://gethomepage.dev/latest/configs/services
 
-- Network:
+- Networking:
         - Traefik:
             icon: traefik.svg
             href: https://traefik.zachtaiji.com/dashboard/#/
-            description: reverse proxy server
+            description: Reverse proxy server
             server: my-docker
             container: proxy
             widget:
                 type: traefik
                 url: https://traefik.zachtaiji.com
+        - Tailscale:
+            icon: tailscale
+            href: https://login.tailscale.com/admin/machines
+            description: Mesh VPN
         - CloudFlare:
             href: https://dash.cloudflare.com/
             icon: cloudflare.svg
@@ -24,42 +28,58 @@
             href: http://192.168.1.1
             icon: router
             description: Router Login
-- Data Science:
+        - SpeedTest:
+            abbr: ST
+            href: https://www.speedtest.net/
+            icon: si-speedtest-#ffffff
+            description: Test internet speed
+- Data Science & Analytics:
         - Seatable:
             icon: /icons/seatable.png
             href: https://seatable.zachtaiji.com
-            description: no-code db
+            description: No-code db
             server: my-docker
             container: seatable-server
         - Nocodb:
             icon: /icons/nocodb.svg
             href: https://nocodb.zachtaiji.com
-            description: no-code db
+            description: No-code db
             server: my-docker
             container: nocodb
         - Teable:
             icon: /icons/teable.svg
             href: https://teable.zachtaiji.com
-            description: postgres no-code db
+            description: Postgres no-code db
             server: my-docker
             container: teable
         - Metabase:
             icon: metabase
             href: https://dashboard.zachtaiji.com
-            description: data viz
+            description: Data viz
             server: my-docker
             container: metabase
+        - Google Analytics:
+            href: https://analytics.google.com/analytics/web/#/p318505188/reports/explorer?params=_u.dateOption%3Dlast90Days%26_u..nav%3Dmaui&r=4656462980&collectionId=life-cycle
+            icon: google-analytics
+            description: Google Analytics Dashboard
 - Media:
         - Seafile:
             icon: seafile.svg
             href: https://files.zachtaiji.com
-            description: cloud storage
+            description: Cloud storage
             server: my-docker
             container: seafile
+        - Hoarder:
+            icon: hoarder
+            href: https://brain.zachtaiji.com
+            description: Bookmark, read it later everything with AI
+            server: my-docker
+            container: hoarder
+- Arr Stack:
         - Jellyfin:
             icon: jellyfin.svg
             href: https://movies.zachtaiji.com
-            description: movies & tv
+            description: Movies & TV
             server: my-docker
             container: jellyfin
             widget:
@@ -71,26 +91,65 @@
                 enableUser: true # optional, defaults to false
                 showEpisodeNumber: true # optional, defaults to false
                 expandOneStreamToTwoRows: false # optional, defaults to true
-- Misc:
+        - Jellyseer:
+            icon: jellyseerr
+            href: https://jellyseerr.zachtaiji.com/
+            description: Request movies & TV shows
+            server: my-docker
+            container: jellyseerr
+        - Radarr:
+            icon: radarr
+            href: https://radarr.zachtaiji.com/
+            description: Movie organizer/manager
+            server: my-docker
+            container: radarr         
+        - Sonarr:
+            icon: sonarr
+            href: http://192.168.1.21:8989/
+            description: TV show organizer/manager
+            server: my-docker
+            container: sonarr       
+        - Jackett:
+            icon: jackett
+            href: https://jackett.zachtaiji.com/UI/Dashboard
+            description: Proxy server for torrents
+            server: my-docker
+            container: jackett   
+        - Transmission:
+            icon: transmission
+            href: http://192.168.1.21:9091
+            description: Torrent client
+            server: my-docker
+            container: transmission
+- Other Apps:
         - Minecraft Server:
             icon: minecraft.svg
             href: https://mc.zachtaiji.com:19132
-            description: GeyserMC server
+            description: Java MC with Geyser & Floodgate & Paper & Spigot & Bucket
             server: my-docker
             container: minecraft-server
+            widget:
+                type: minecraft
+                url: https://mc.zachtaiji.com
+        - VaultWarden:
+            icon: si-vaultwarden-#ffffff
+            href: https://vaultwarden.zachtaiji.com
+            description: Password manager
+            server: my-docker
+            container: vaultwarden
+        - Dillinger:
+            icon: dillinger
+            href: https://markdown.zachtaiji.com
+            description: Markdown viewer & editor
+            server: my-docker
+            container: dillinger
         - n8n:
             icon: n8n.svg
             href: https://n8n.zachtaiji.com
-            description: automations
+            description: Automations
             server: my-docker
             container: n8n
-        - VaultWarden:
-            icon: vaultwarden.svg
-            href: https://vaultwarden.zachtaiji.com
-            description: password manager
-            server: my-docker
-            container: vaultwarden
-- Websites:
+- Websites & Databases:
         - Blog:
             icon: si-ghost
             href: https://zachtaiji.com
@@ -100,10 +159,9 @@
         - Static:
             icon: si-filedotio
             href: https://static.zachtaiji.com/
-            description: static fileserver
+            description: Static fileserver
             server: my-docker
             container: static
-- Databases:
         - Mariadb:
             icon: mariadb.svg
             server: my-docker

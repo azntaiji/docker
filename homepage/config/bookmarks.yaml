@@ -2,17 +2,6 @@
 # For configuration options and examples, please see:
 # https://gethomepage.dev/latest/configs/bookmarks
 
-- Metrics:
-    - SpeedTest:
-        - abbr: ST
-          href: https://www.speedtest.net/
-          icon: si-speedtest-#ffffff
-          description: Test internet speed
-    - Google Analytics:
-        - abbr: GA
-          href: https://analytics.google.com/analytics/web/#/p318505188/reports/explorer?params=_u.dateOption%3Dlast90Days%26_u..nav%3Dmaui&r=4656462980&collectionId=life-cycle
-          icon: google-analytics
-          description: Google Analytics Dashboard
 - Lists:
     - GitHub:
         - abbr: GH

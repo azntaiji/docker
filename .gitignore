@@ -21,3 +21,5 @@ onlyoffice/logs/
 onlyoffice/config/
 homepage/config/logs
 dillinger/**/
+hoarder/meilisearch
+torrent-stack/config

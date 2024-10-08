@@ -1,0 +1,135 @@
+services:
+  vpn:
+    container_name: vpn
+    image: qmcgaw/gluetun
+    cap_add:
+      - NET_ADMIN
+    env_file:
+      - .env
+    environment:
+      - VPN_SERVICE_PROVIDER=surfshark
+      - VPN_TYPE=wireguard
+    restart: unless-stopped
+    ports:
+      - 9091:9091 #port for transmission UI to be reachable
+    networks:
+      - reverse-proxynet
+  transmission:
+    image: lscr.io/linuxserver/transmission:latest
+    container_name: transmission
+    network_mode: service:vpn
+    env_file:
+      - .env
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+    volumes:
+      - ./config/transmission:/config
+      - ${ROOT_DIR}/downloads:/downloads
+      #- ./torrent-files:/watch
+    #ports:
+    #  - 51413:51413
+    #  - 51413:51413/udp
+    restart: unless-stopped
+  jackett:
+    image: linuxserver/jackett
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ}
+      - AUTO_UPDATE=true #optional
+    volumes:
+      - ./config/jackett:/config
+      - ${ROOT_DIR}/jackett/downloads:/downloads
+    ports:
+      - 9117:9117
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.jackett.entrypoints=web
+      - traefik.http.routers.jackett.rule=Host(`jackett.zachtaiji.com`)
+      - traefik.http.services.jackett.loadbalancer.server.port=9117
+      - traefik.http.routers.jackett.middlewares=https_redirect@docker,non_www@docker
+      - traefik.http.routers.jackett-secure.entrypoints=websecure
+      - traefik.http.routers.jackett-secure.rule=Host(`jackett.zachtaiji.com`)
+      - traefik.http.routers.jackett-secure.tls=true
+      - traefik.http.routers.jackett-secure.tls.certresolver=myresolver
+      - traefik.docker.network=reverse-proxynet
+    networks:
+      - reverse-proxynet
+  sonarr:
+    container_name: sonarr
+    image: ghcr.io/hotio/sonarr
+    ports:
+      - "8989:8989"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - ./config/sonarr:/config
+      - /mnt/media-1/tv-shows-library:/tv-shows-library-1
+      - ${ROOT_DIR}/tv-shows-library:/tv-shows-library 
+      - ${ROOT_DIR}/downloads/complete:/downloads/complete # Folder where downloaded transmssion files are
+    networks:
+      - reverse-proxynet
+  radarr:
+    container_name: radarr
+    image: ghcr.io/hotio/radarr
+    ports:
+      - "7878:7878"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - UMASK=002
+      - TZ=${TZ}
+    volumes:
+      - ./config/radarr:/config
+      - /mnt/media-1/movies-library:/movies-library-1
+      - ${ROOT_DIR}/movies-library:/movies-library 
+      - ${ROOT_DIR}/downloads/complete:/downloads/complete # Folder where downloaded transmssion files are
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.radarr.entrypoints=web
+      - traefik.http.routers.radarr.rule=Host(`radarr.zachtaiji.com`)
+      - traefik.http.services.radarr.loadbalancer.server.port=7878
+      - traefik.http.routers.radarr.middlewares=https_redirect@docker,non_www@docker
+      - traefik.http.routers.radarr-secure.entrypoints=websecure
+      - traefik.http.routers.radarr-secure.rule=Host(`radarr.zachtaiji.com`)
+      - traefik.http.routers.radarr-secure.tls=true
+      - traefik.http.routers.radarr-secure.tls.certresolver=myresolver
+      - traefik.docker.network=reverse-proxynet
+    networks:
+      - reverse-proxynet
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=America/Los_Angeles
+      - PORT=5055 #optional
+    #ports:
+    #  - 5055:5055
+    volumes:
+      - ./config/jellyseerr:/app/config
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.jellyseerr.entrypoints=web
+      - traefik.http.routers.jellyseerr.rule=Host(`jellyseerr.zachtaiji.com`)
+      - traefik.http.services.jellyseerr.loadbalancer.server.port=5055
+      - traefik.http.routers.jellyseerr.middlewares=https_redirect@docker,non_www@docker
+      - traefik.http.routers.jellyseerr-secure.entrypoints=websecure
+      - traefik.http.routers.jellyseerr-secure.rule=Host(`jellyseerr.zachtaiji.com`)
+      - traefik.http.routers.jellyseerr-secure.tls=true
+      - traefik.http.routers.jellyseerr-secure.tls.certresolver=myresolver
+      - traefik.docker.network=reverse-proxynet
+    networks:
+      - reverse-proxynet
+networks:
+  reverse-proxynet:
+    name: reverse-proxynet
+    external: true
