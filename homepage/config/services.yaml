@@ -33,10 +33,14 @@
             href: https://www.speedtest.net/
             icon: si-speedtest-#ffffff
             description: Test internet speed
+        - Mailgun:
+            href: https://app.mailgun.com/dashboard
+            icon: si-mailgun
+            description: SMTP and API email sending service
         - Mailersend:
             href: https://app.mailersend.com/dashboard
-            icon: mailersend
-            description: SMTP and API email sending service
+            icon: mdi-email-arrow-right
+            description: Backup SMTP and API email sending service
 - Data Science & Analytics:
         - Seatable:
             icon: /icons/seatable.png
