@@ -3,6 +3,7 @@ services:
     build: .
     container_name: dillinger
     image: joemccann/dillinger
+    restart: always
     ports:
       - "9000:9000"
     environment:

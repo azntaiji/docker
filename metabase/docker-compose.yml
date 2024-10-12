@@ -5,6 +5,7 @@ services:
     hostname: metabase
     volumes:
       - /dev/urandom:/dev/random:ro
+      - ./databases:/databases
     external_links:
       - mysql-db
     restart: always
