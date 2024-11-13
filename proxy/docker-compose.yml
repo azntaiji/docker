@@ -21,7 +21,7 @@ services:
       - "--entrypoints.radarr.address=:7878" 
       - "--entrypoints.n8n.address=:5678"
       - "--entrypoints.jackett.address=:9117"
-      - "--entrypoints.mc1.address=:19132/udp"
+      - "--entrypoints.mc1.address=:8123"
       - "--entrypoints.mc2.address=:19132"
       - "--entrypoints.mc3.address=:25565"
       - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
@@ -32,6 +32,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "5432:5432"
     expose:
       - "22:22"
     volumes:

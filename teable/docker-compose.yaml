@@ -10,6 +10,7 @@ services:
     volumes:
       - ./data:/app/.assets:rw
     environment:
+      - TZ=${TIMEZONE}
       - NEXT_ENV_IMAGES_ALL_REMOTE=true
     labels:
       - traefik.enable=true
@@ -28,24 +29,27 @@ services:
     depends_on:
       teable-db-migrate:
         condition: service_completed_successfully
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:3000/health']
-      start_period: 5s
-      interval: 5s
-      timeout: 3s
-      retries: 3
   teable-db:
     container_name: teable-db
     image: postgres:15.4
     restart: always
-    ports:
-      - '42345:5432'
     volumes:
       - ./teable-db:/var/lib/postgresql/data:rw
+    # comment ports when running behind Traefik
+    # ports:
+    #   - "5432:5432"
     environment:
+      - TZ=${TIMEZONE}
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.tcp.routers.teable-db.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.teable-db.entrypoints=postgres"
+      - "traefik.tcp.routers.teable-db.service=teable-db-service"
+      - "traefik.tcp.services.teable-db-service.loadbalancer.server.port=${POSTGRES_PORT}"
+      - traefik.docker.network=reverse-proxynet
     networks:
       - teable
       - reverse-proxynet
@@ -56,8 +60,12 @@ services:
       retries: 3
   teable-db-migrate:
     image: ghcr.io/teableio/teable-db-migrate:latest
+    env_file:
+      - .env
+    container_name: teable-db-migrate
     environment:
-      - PRISMA_DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      - TZ=${TIMEZONE}
+      - PRISMA_DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@teable-db:5432/${POSTGRES_DB}
     networks:
       - teable
       - reverse-proxynet

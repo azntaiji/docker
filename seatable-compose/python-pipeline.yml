@@ -4,6 +4,8 @@ services:
     image: ${PYTHON_SCHEDULER_IMAGE:-seatable/seatable-python-scheduler:3.1.0}
     restart: unless-stopped
     container_name: python-scheduler
+    env_file:
+      - .env
     environment:
       - TIME_ZONE=${TIME_ZONE}
       - DB_HOST=${SEATABLE_MYSQL_HOST:-mariadb}
@@ -17,7 +19,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
-      - frontend-net
+      - reverse-proxynet
       - backend-scheduler-net
       - backend-seatable-net
     healthcheck:
@@ -35,6 +37,8 @@ services:
     image: ${PYTHON_STARTER_IMAGE:-seatable/seatable-python-starter:3.1.0}
     restart: unless-stopped
     container_name: python-starter
+    env_file:
+      - .env
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}:${PYTHON_TRANSFER_DIRECTORY_PATH:-/tmp}"
@@ -55,7 +59,8 @@ services:
       - backend-scheduler-net
 
 networks:
-  frontend-net:
-    name: frontend-net
+  reverse-proxynet:
+    name: reverse-proxynet
+    external: true
   backend-scheduler-net:
     name: backend-scheduler-net
