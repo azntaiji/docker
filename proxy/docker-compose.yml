@@ -24,6 +24,7 @@ services:
       - "--entrypoints.mc1.address=:8123"
       - "--entrypoints.mc2.address=:19132"
       - "--entrypoints.mc3.address=:25565"
+      - "--entrypoints.mc4.address=:25566"
       - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"

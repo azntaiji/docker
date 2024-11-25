@@ -4,11 +4,15 @@ services:
     container_name: dillinger
     image: joemccann/dillinger
     restart: always
+    #volumes:
+    #- ./data:/dillinger // TODO Re-enable after making changes
+    cap_add:
+    - SYS_ADMIN
     ports:
       - "9000:9000"
     environment:
       - "BIND_ADDRESS=0.0.0.0"
-      - "PORT=9000"
+      - "PORT=9000" // FIXME add more envs
     labels:
       - traefik.enable=true
       - traefik.http.routers.markdown.entrypoints=web

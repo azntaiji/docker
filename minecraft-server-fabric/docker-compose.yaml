@@ -1,0 +1,51 @@
+services:
+  minecraft-server-fabric:
+    image: itzg/minecraft-server
+    restart: always
+    container_name: "minecraft-server-fabric"
+    #user: 1000:1000
+    environment:
+      TZ: "America/Los_Angeles"
+      UID: 1000
+      GID: 1000
+      EULA: "TRUE"
+      VERSION: "1.21"
+      TYPE: "FABRIC"
+      FABRIC_LAUNCHER_VERSION: "1.0.1"
+      FABRIC_LOADER_VERSION: "0.16.9"
+      MOTD: "Zachs MC2 Server"
+      DIFFICULTY: "normal"
+      ENABLE_COMMAND_BLOCK: "TRUE"
+      GENERATE_STRUCTURES: "FALSE"
+      SPAWN_ANIMALS: "FALSE"
+      SPAWN_NPCS: "FALSE"
+      SPAWN_MONSTERS: "FALSE"
+      MODE: "creative"
+      LEVEL_TYPE: "minecraft:flat"
+      GENERATOR_SETTINGS: "{\"layers\":[{\"block\":\"minecraft:bedrock\",\"height\":59},{\"block\":\"minecraft:stone\",\"height\":3},{\"block\":\"minecraft:dirt\",\"height\":1},{\"block\":\"minecraft:grass_block\",\"height\":3}]}"
+      ALLOW_FLIGHT: "TRUE"
+      #SERVER_NAME: "Seattle"
+      EXEC_DIRECTLY: "TRUE"
+      # SETUP_ONLY: "TRUE"
+      RESOURCE_PACK: "https://cdn.modrinth.com/data/1MyOrwfu/versions/BYoL3YKt/Nautilus3D-V2.2.zip"
+    volumes:
+      - ./data:/data:rw
+    ports:
+      - "25566:25566"
+    stdin_open: true
+    tty: true
+    labels:
+        - traefik.enable=true
+        - traefik.http.routers.minecraft2.entrypoints=mc4
+        - traefik.http.routers.minecraft2.rule=Host(`mc2.zachtaiji.com`)
+        #- traefik.http.services.minecraft2.loadbalancer.server.port=25566
+        - traefik.http.routers.minecraft2.middlewares=non_www@docker
+        #- traefik.http.routers.minecraft-secure.tls=true
+        #- traefik.http.routers.minecraft-secure.tls.certresolver=myresolver
+        - traefik.docker.network=reverse-proxynet
+    networks:
+      - reverse-proxynet
+networks:
+  reverse-proxynet:
+    name: reverse-proxynet
+    external: true
