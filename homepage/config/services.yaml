@@ -81,12 +81,6 @@
             icon: backblaze.svg
             href: https://secure.backblaze.com/b2_buckets.htm
             description: Backblaze b2 bucket storage backup
-        - Hoarder:
-            icon: hoarder
-            href: https://brain.zachtaiji.com
-            description: Bookmark, read it later everything with AI
-            server: my-docker
-            container: hoarder
 - Arr Stack:
         - Jellyfin:
             icon: jellyfin.svg
