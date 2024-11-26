@@ -1,19 +1,23 @@
 services:
   vpn:
     container_name: vpn
-    image: qmcgaw/gluetun
+    image: qmcgaw/gluetun:latest
     cap_add:
       - NET_ADMIN
     env_file:
       - .env
     environment:
-      - VPN_SERVICE_PROVIDER=surfshark
+      - VPN_SERVICE_PROVIDER=custom
       - VPN_TYPE=wireguard
     restart: unless-stopped
     ports:
       - 9091:9091 #port for transmission UI to be reachable
     networks:
       - reverse-proxynet
+    labels:
+      - "traefik.udp.routers.udp-router.entrypoints=udp"
+      - "traefik.udp.routers.udp-router.service=my-udp-service"
+      - "traefik.udp.services.my-udp-service.loadbalancer.server.port=51413"
   transmission:
     image: lscr.io/linuxserver/transmission:latest
     container_name: transmission
@@ -32,6 +36,10 @@ services:
     #  - 51413:51413
     #  - 51413:51413/udp
     restart: unless-stopped
+    labels:
+      - "traefik.udp.routers.udp-router.entrypoints=udp"
+      - "traefik.udp.routers.udp-router.service=my-udp-service"
+      - "traefik.udp.services.my-udp-service.loadbalancer.server.port=51413"
   jackett:
     image: linuxserver/jackett
     container_name: jackett
@@ -62,8 +70,8 @@ services:
   sonarr:
     container_name: sonarr
     image: ghcr.io/hotio/sonarr
-    ports:
-      - "8989:8989"
+    #ports:
+    #  - "8989:8989"
     environment:
       - PUID=1000
       - PGID=1000
@@ -73,9 +81,21 @@ services:
       - ./config/sonarr:/config
       - /mnt/media-1/tv-shows-library:/tv-shows-library-1
       - ${ROOT_DIR}/tv-shows-library:/tv-shows-library 
+      - /mnt-media-3/tv-shows-library-3:/tv-shows-library-3
       - ${ROOT_DIR}/downloads/complete:/downloads/complete # Folder where downloaded transmssion files are
     networks:
       - reverse-proxynet
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.sonarr.entrypoints=web
+      - traefik.http.routers.sonarr.rule=Host(`sonarr.zachtaiji.com`)
+      - traefik.http.services.sonarr.loadbalancer.server.port=8989
+      - traefik.http.routers.sonarr.middlewares=https_redirect@docker,non_www@docker
+      - traefik.http.routers.sonarr-secure.entrypoints=websecure
+      - traefik.http.routers.sonarr-secure.rule=Host(`sonarr.zachtaiji.com`)
+      - traefik.http.routers.sonarr-secure.tls=true
+      - traefik.http.routers.sonarr-secure.tls.certresolver=myresolver
+      - traefik.docker.network=reverse-proxynet
   radarr:
     container_name: radarr
     image: ghcr.io/hotio/radarr
@@ -89,6 +109,7 @@ services:
     volumes:
       - ./config/radarr:/config
       - /mnt/media-1/movies-library:/movies-library-1
+      - /mnt-media-3/movies-library-3:/movies-library-3
       - ${ROOT_DIR}/movies-library:/movies-library 
       - ${ROOT_DIR}/downloads/complete:/downloads/complete # Folder where downloaded transmssion files are
     labels:

@@ -8,6 +8,7 @@ services:
       - ./config:/config:rw
       - /mnt/media-1:/media-1:rw
       - /mnt/media-2:/media-2:rw
+      - /mnt/media-3:/media-3:rw
     networks:
       - reverse-proxynet
     env_file:
