@@ -20,6 +20,6 @@ onlyoffice/cache/
 onlyoffice/logs/
 onlyoffice/config/
 homepage/config/logs
-dillinger/**/
+!dillinger/*
 hoarder/meilisearch
 torrent-stack/config

@@ -2,27 +2,27 @@ services:
   dillinger:
     build: .
     container_name: dillinger
-    image: joemccann/dillinger
+    image: lscr.io/linuxserver/dillinger:latest
     restart: always
-    #volumes:
-    #- ./data:/dillinger // TODO Re-enable after making changes
+    volumes:
+      - ./data/views:/app/dillinger/views 
+      - ./data/public/css:/app/dillinger/public/css
+      - ./data/public/img/icons:/app/dillinger/public/img/icons
+      - ./data/config:/config
     cap_add:
-    - SYS_ADMIN
-    ports:
-      - "9000:9000"
+      - SYS_ADMIN
+    security_opt:
+      - seccomp=./pdf-export.json
     environment:
-      - "BIND_ADDRESS=0.0.0.0"
-      - "PORT=9000" // FIXME add more envs
+      - UID=1000
+      - PGID=1000
     labels:
       - traefik.enable=true
-      - traefik.http.routers.markdown.entrypoints=web
-      - traefik.http.routers.markdown.rule=Host(`markdown.zachtaiji.com`)
-      - traefik.http.services.markdown.loadbalancer.server.port=9000
-      - traefik.http.routers.markdown.middlewares=https_redirect@docker,non_www@docker
-      - traefik.http.routers.markdown-secure.entrypoints=websecure
-      - traefik.http.routers.markdown-secure.rule=Host(`markdown.zachtaiji.com`)
-      - traefik.http.routers.markdown-secure.tls=true
-      - traefik.http.routers.markdown-secure.tls.certresolver=myresolver
+      - traefik.http.routers.dillinger.entrypoints=websecure
+      - traefik.http.routers.dillinger.rule=Host(`markdown.zachtaiji.com`)
+      - traefik.http.services.dillinger.loadbalancer.server.port=8080 
+      - traefik.http.routers.dillinger.tls=true
+      - traefik.http.routers.dillinger.tls.certresolver=myresolver
       - traefik.docker.network=reverse-proxynet
     networks:
       - reverse-proxynet
