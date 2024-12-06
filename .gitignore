@@ -1,25 +1,48 @@
+# excludes
+!dillinger/*
+!minecraft-server-fabric/server.properties
+
+# data dirs
+**/data/
+
+# archived files
 .archive/
 .archived/
+
+# vscode
+.vscode/
+
+# env files
 **/.env
 **/*.env
-**/data/
-mysql/data/
-seafile/mysql/
-seatable/mysql/
+
+# homepage config files
+homepage/config/logs
+
+# jellyfin
 jellyfin/cache/
 jellyfin/config/
+
+# mysql
+mysql/data/
+
+# letsencrypt keys
 proxy/letsencrypt/
-seatable/seatable-license.txt
-seatable-compose/seatable-license.txt
+
+# seafile
+seafile/mysql/
+
+# seatable
 seatable-compose/mysql/*
-zachtaiji-blog/ghost/
-.vscode/
+seatable-compose/seatable-license.txt
+seatable/mysql/
+seatable/seatable-license.txt
+
+# teable
 teable/teable-db/
-onlyoffice/_config/
-onlyoffice/cache/
-onlyoffice/logs/
-onlyoffice/config/
-homepage/config/logs
-!dillinger/*
-hoarder/meilisearch
+
+# torrent stack
 torrent-stack/config
+
+# blog
+zachtaiji-blog/ghost/

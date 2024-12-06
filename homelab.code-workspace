@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../home/azntaiji/azntaiji.github.io"
 		}
 	],
 	"settings": {

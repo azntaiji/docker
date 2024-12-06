@@ -8,7 +8,7 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=true"
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.udp.address=:51413/udp"
+      #- "--entrypoints.udp.address=:51413/udp"
       - "--entrypoints.websecure.address=:443"
       - "--entryPoints.mariadb.address=:3306"
       - "--entryPoints.mysql.address=:3307"
@@ -35,7 +35,7 @@ services:
       - "80:80"
       - "443:443"
       - "5432:5432"
-      - "51413:51413/udp"
+      #- "51413:51413/udp"
     expose:
       - "22:22"
     volumes:

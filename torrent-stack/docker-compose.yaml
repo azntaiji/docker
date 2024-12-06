@@ -12,6 +12,8 @@ services:
     restart: unless-stopped
     ports:
       - 9091:9091 #port for transmission UI to be reachable
+      - 51413:51413
+      - 51413:51413/udp
     networks:
       - reverse-proxynet
     labels:
@@ -37,9 +39,19 @@ services:
     #  - 51413:51413/udp
     restart: unless-stopped
     labels:
-      - "traefik.udp.routers.udp-router.entrypoints=udp"
-      - "traefik.udp.routers.udp-router.service=my-udp-service"
-      - "traefik.udp.services.my-udp-service.loadbalancer.server.port=51413"
+      #- "traefik.udp.routers.udp-router.entrypoints=udp"
+      #- "traefik.udp.routers.udp-router.service=my-udp-service"
+      #- "traefik.udp.services.my-udp-service.loadbalancer.server.port=51413"
+      - traefik.enable=true
+      - traefik.http.routers.transmission.entrypoints=web
+      - traefik.http.routers.transmission.rule=Host(`transmission.zachtaiji.com`)
+      - traefik.http.services.transmission.loadbalancer.server.port=9091
+      - traefik.http.routers.transmission.middlewares=https_redirect@docker,non_www@docker
+      - traefik.http.routers.transmission-secure.entrypoints=websecure
+      - traefik.http.routers.transmission-secure.rule=Host(`transmission.zachtaiji.com`)
+      - traefik.http.routers.transmission-secure.tls=true
+      - traefik.http.routers.transmission-secure.tls.certresolver=myresolver
+      - traefik.docker.network=reverse-proxynet
   jackett:
     image: linuxserver/jackett
     container_name: jackett

@@ -35,12 +35,15 @@ layout:
   Arr Stack:
     style: row
     columns: 3
-  Media:
+  Storage:
     style: row
-    columns: 3
+    columns: 2
+  Minecraft Servers:
+    style: row
+    columns: 2
   Other Apps:
     style: row
-    columns: 4
+    columns: 3
   Data Science & Analytics:
     style: column
     columns: 2

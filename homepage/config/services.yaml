@@ -70,7 +70,7 @@
             href: https://analytics.google.com/analytics/web/#/p318505188/reports/explorer?params=_u.dateOption%3Dlast90Days%26_u..nav%3Dmaui&r=4656462980&collectionId=life-cycle
             icon: google-analytics
             description: Google Analytics Dashboard
-- Media:
+- Storage:
         - Seafile:
             icon: seafile.svg
             href: https://files.zachtaiji.com
@@ -108,35 +108,65 @@
             href: https://radarr.zachtaiji.com/
             description: Movie organizer/manager
             server: my-docker
-            container: radarr         
+            container: radarr  
+            widget:
+                type: radarr
+                url: https://radarr.zachtaiji.com/
+                key: {{HOMEPAGE_VAR_RADARRKEY}}
+                enableQueue: true           
         - Sonarr:
             icon: sonarr
-            href: http://192.168.1.21:8989/
+            href: https://sonarr.zachtaiji.com/
             description: TV show organizer/manager
             server: my-docker
-            container: sonarr       
+            container: sonarr   
+            widget:
+                type: sonarr
+                url: https://sonarr.zachtaiji.com/
+                key: {{HOMEPAGE_VAR_SONARRKEY}}
+                enableQueue: true    
         - Jackett:
             icon: jackett
             href: https://jackett.zachtaiji.com/UI/Dashboard
             description: Proxy server for torrents
             server: my-docker
-            container: jackett   
+            container: jackett  
+            widget:
+                type: jackett
+                url: https://jackett.zachtaiji.com
+                password: {{HOMEPAGE_VAR_JACKETTPW}}
         - Transmission:
             icon: transmission
-            href: http://192.168.1.21:9091
+            href: https://transmission.zachtaiji.com
             description: Torrent client
             server: my-docker
             container: transmission
-- Other Apps:
-        - Minecraft Server:
+            widget:
+                type: transmission
+                url: https://transmission.zachtaiji.com
+                username: azntaiji
+                password: {{HOMEPAGE_VAR_TRANSMISSIONPW}}
+                rpcUrl: /transmission/ # Optional. Matches the value of "rpc-url" in your Transmission's settings.json file
+- Minecraft Servers:
+        - Geyser Minecraft Server:
             icon: minecraft.svg
             href: https://mc.zachtaiji.com:19132
-            description: Java MC with Geyser & Floodgate & Paper & Spigot & Bucket
+            description: For bedrock crossplatform play
             server: my-docker
             container: minecraft-server
             widget:
                 type: minecraft
                 url: https://mc.zachtaiji.com
+        - Fabric Minecraft Server:
+            icon: minecraft.svg
+            href: https://mc2.zachtaiji.com:25566
+            description: Fabric Java server
+            server: my-docker
+            container: minecraft-server-fabric
+            widget:
+                type: minecraft
+                url: https://mc2.zachtaiji.com:25566
+- Other Apps:
         - VaultWarden:
             icon: si-vaultwarden-#ffffff
             href: https://vaultwarden.zachtaiji.com
