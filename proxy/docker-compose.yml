@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: traefik:2.9
+    image: traefik:latest
     container_name: proxy
     command:
       - "--api=true"
@@ -53,6 +53,7 @@ services:
       - traefik.http.middlewares.non_www.redirectregex.regex=^(http|https)?://(?:www\.)?(.+)
       - traefik.http.middlewares.non_www.redirectregex.replacement=https://$${2} 
       - traefik.http.middlewares.non_www.redirectregex.permanent=true
+      - traefik.http.middlewares.transmissionHeaders.headers.customrequestheaders.X-Transmission-Session-Id=""
       - traefik.http.routers.traefik-dash.entrypoints=web
       - traefik.http.routers.traefik-dash.rule=Host(`traefik.zachtaiji.com`)
       - traefik.http.services.traefik-dash.loadbalancer.server.port=8080

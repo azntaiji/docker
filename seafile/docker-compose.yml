@@ -33,14 +33,14 @@ services:
         hard: -1
     mem_limit: 4g
     volumes:
-      - ./data/elasticsearch:/usr/share/elasticsearch/data
+      - /mnt/seafile-data/elasticsearch:/usr/share/elasticsearch/data
     networks:
       - seafile-internal
   seafile:
     image: docker.seadrive.org/seafileltd/seafile-pro-mc:11.0-latest
     container_name: seafile
     volumes:
-      - ./data/seafile-data:/shared
+      - /mnt/seafile-data/seafile-data:/shared
     environment:
       - DB_HOST=seafile-db
       - DB_ROOT_PASSWD=${SEAFILE_DB_PASSWORD}
@@ -75,7 +75,7 @@ services:
       - 7070:7070
       - 8888:8888
     volumes:
-      - ./data/seadoc-data/:/shared
+      - /mnt/seafile-data/seadoc-data/:/shared
     environment:
       - DB_HOST=seafile-db
       - DB_PORT=3306

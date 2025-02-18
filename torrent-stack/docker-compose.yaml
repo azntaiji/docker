@@ -4,6 +4,8 @@ services:
     image: qmcgaw/gluetun:latest
     cap_add:
       - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
     env_file:
       - .env
     environment:
@@ -24,6 +26,8 @@ services:
     image: lscr.io/linuxserver/transmission:latest
     container_name: transmission
     network_mode: service:vpn
+    depends_on:
+      - vpn
     env_file:
       - .env
     environment:
@@ -38,20 +42,10 @@ services:
     #  - 51413:51413
     #  - 51413:51413/udp
     restart: unless-stopped
-    labels:
-      #- "traefik.udp.routers.udp-router.entrypoints=udp"
-      #- "traefik.udp.routers.udp-router.service=my-udp-service"
-      #- "traefik.udp.services.my-udp-service.loadbalancer.server.port=51413"
-      - traefik.enable=true
-      - traefik.http.routers.transmission.entrypoints=web
-      - traefik.http.routers.transmission.rule=Host(`transmission.zachtaiji.com`)
-      - traefik.http.services.transmission.loadbalancer.server.port=9091
-      - traefik.http.routers.transmission.middlewares=https_redirect@docker,non_www@docker
-      - traefik.http.routers.transmission-secure.entrypoints=websecure
-      - traefik.http.routers.transmission-secure.rule=Host(`transmission.zachtaiji.com`)
-      - traefik.http.routers.transmission-secure.tls=true
-      - traefik.http.routers.transmission-secure.tls.certresolver=myresolver
-      - traefik.docker.network=reverse-proxynet
+    #labels:
+    #  - "traefik.udp.routers.udp-router.entrypoints=udp"
+    #  - "traefik.udp.routers.udp-router.service=my-udp-service"
+    #  - "traefik.udp.services.my-udp-service.loadbalancer.server.port=51413"
   jackett:
     image: linuxserver/jackett
     container_name: jackett
@@ -93,7 +87,7 @@ services:
       - ./config/sonarr:/config
       - /mnt/media-1/tv-shows-library:/tv-shows-library-1
       - ${ROOT_DIR}/tv-shows-library:/tv-shows-library 
-      - /mnt-media-3/tv-shows-library-3:/tv-shows-library-3
+      - /mnt/media-3/tv-shows-library-3:/tv-shows-library-3
       - ${ROOT_DIR}/downloads/complete:/downloads/complete # Folder where downloaded transmssion files are
     networks:
       - reverse-proxynet
@@ -121,7 +115,7 @@ services:
     volumes:
       - ./config/radarr:/config
       - /mnt/media-1/movies-library:/movies-library-1
-      - /mnt-media-3/movies-library-3:/movies-library-3
+      - /mnt/media-3/movies-library-3:/movies-library-3
       - ${ROOT_DIR}/movies-library:/movies-library 
       - ${ROOT_DIR}/downloads/complete:/downloads/complete # Folder where downloaded transmssion files are
     labels:
@@ -137,6 +131,8 @@ services:
       - traefik.docker.network=reverse-proxynet
     networks:
       - reverse-proxynet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
     container_name: jellyseerr

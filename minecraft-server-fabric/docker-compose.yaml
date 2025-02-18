@@ -1,7 +1,7 @@
 services:
   minecraft-server-fabric:
     image: itzg/minecraft-server
-    #restart: always
+    restart: always
     container_name: "minecraft-server-fabric"
     #user: 1000:1000
     environment:
@@ -24,6 +24,7 @@ services:
       EXEC_DIRECTLY: "TRUE"
       # SETUP_ONLY: "TRUE"
       RESOURCE_PACK: "https://cdn.modrinth.com/data/1MyOrwfu/versions/BYoL3YKt/Nautilus3D-V2.2.zip"
+      SERVER_PORT: 25566
     volumes:
       - ./data:/data:rw
     ports:

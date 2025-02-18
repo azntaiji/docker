@@ -60,12 +60,12 @@
             description: Postgres no-code db
             server: my-docker
             container: teable
-        - Metabase:
-            icon: metabase
-            href: https://dashboard.zachtaiji.com
-            description: Data viz
-            server: my-docker
-            container: metabase
+#        - Metabase:
+#            icon: metabase
+#            href: https://dashboard.zachtaiji.com
+#            description: Data viz
+#            server: my-docker
+#            container: metabase
         - Google Analytics:
             href: https://analytics.google.com/analytics/web/#/p318505188/reports/explorer?params=_u.dateOption%3Dlast90Days%26_u..nav%3Dmaui&r=4656462980&collectionId=life-cycle
             icon: google-analytics
@@ -108,23 +108,13 @@
             href: https://radarr.zachtaiji.com/
             description: Movie organizer/manager
             server: my-docker
-            container: radarr  
-            widget:
-                type: radarr
-                url: https://radarr.zachtaiji.com/
-                key: {{HOMEPAGE_VAR_RADARRKEY}}
-                enableQueue: true           
+            container: radarr       
         - Sonarr:
             icon: sonarr
             href: https://sonarr.zachtaiji.com/
             description: TV show organizer/manager
             server: my-docker
-            container: sonarr   
-            widget:
-                type: sonarr
-                url: https://sonarr.zachtaiji.com/
-                key: {{HOMEPAGE_VAR_SONARRKEY}}
-                enableQueue: true    
+            container: sonarr
         - Jackett:
             icon: jackett
             href: https://jackett.zachtaiji.com/UI/Dashboard
@@ -141,12 +131,6 @@
             description: Torrent client
             server: my-docker
             container: transmission
-            widget:
-                type: transmission
-                url: https://transmission.zachtaiji.com
-                username: azntaiji
-                password: {{HOMEPAGE_VAR_TRANSMISSIONPW}}
-                rpcUrl: /transmission/ # Optional. Matches the value of "rpc-url" in your Transmission's settings.json file
 - Minecraft Servers:
         - Geyser Minecraft Server:
             icon: minecraft.svg
@@ -179,12 +163,12 @@
             description: Markdown viewer & editor
             server: my-docker
             container: dillinger
-        - n8n:
-            icon: n8n.svg
-            href: https://n8n.zachtaiji.com
-            description: Automations
-            server: my-docker
-            container: n8n
+#        - n8n:
+#            icon: n8n.svg
+#            href: https://n8n.zachtaiji.com
+#            description: Automations
+#            server: my-docker
+#            container: n8n
 - Websites & Databases:
         - Blog:
             icon: si-ghost
