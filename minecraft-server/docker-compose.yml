@@ -17,7 +17,7 @@ services:
     # Environment variables
     environment:
       - Port="25565"
-      - BedrockPort="19132"
+      #- BedrockPort="19132"
       - TZ="America/Los_Angeles" # Timezone
       - UID="1000"
       - PGID="1000"

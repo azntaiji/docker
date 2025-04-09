@@ -24,10 +24,10 @@
 # WARNING: if you're exposing Penpot to the internet, you should remove the flags
 # 'disable-secure-session-cookies' and 'disable-email-verification'
 x-flags: &penpot-flags
-  PENPOT_FLAGS: disable-email-verification enable-smtp enable-prepl-server disable-secure-session-cookies
+  PENPOT_FLAGS: enable-smtp enable-prepl-server # disable-secure-session-cookies disable-email-verification
 
 x-uri: &penpot-public-uri
-  PENPOT_PUBLIC_URI: http://localhost:9001
+  PENPOT_PUBLIC_URI: https://penpot.zachtaiji.com
 
 x-body-size: &penpot-http-body-size
   # Max body size (30MiB); Used for plain requests, should never be
@@ -39,77 +39,40 @@ x-body-size: &penpot-http-body-size
 
 
 networks:
-  penpot:
-
-volumes:
-  penpot_postgres_v15:
-  penpot_assets:
-  # penpot_traefik:
-  # penpot_minio:
+  reverse-proxynet:
+    name: reverse-proxynet
+    external: true
 
 services:
-  ## Traefik service declaration example. Consider using it if you are going to expose
-  ## penpot to the internet, or a different host than `localhost`.
-
-  # traefik:
-  #   image: traefik:v2.9
-  #   networks:
-  #     - penpot
-  #   command:
-  #     - "--api.insecure=true"
-  #     - "--entryPoints.web.address=:80"
-  #     - "--providers.docker=true"
-  #     - "--providers.docker.exposedbydefault=false"
-  #     - "--entryPoints.websecure.address=:443"
-  #     - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-  #     - "--certificatesresolvers.letsencrypt.acme.email=<EMAIL_ADDRESS>"
-  #     - "--certificatesresolvers.letsencrypt.acme.storage=/traefik/acme.json"
-  #   volumes:
-  #     - "penpot_traefik:/traefik"
-  #     - "/var/run/docker.sock:/var/run/docker.sock"
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
 
   penpot-frontend:
     image: "penpotapp/frontend:latest"
     restart: always
+    container_name: penpot-frontend
     ports:
       - 9001:8080
 
     volumes:
-      - penpot_assets:/opt/data/assets
+      - ./data/penpot_assets:/opt/data/assets
 
     depends_on:
       - penpot-backend
       - penpot-exporter
 
     networks:
-      - penpot
+      - reverse-proxynet
 
     labels:
-      - "traefik.enable=true"
-
-      ## HTTP: example of labels for the case where penpot will be exposed to the
-      ## internet with only HTTP (without HTTPS) using traefik.
-
-      # - "traefik.http.routers.penpot-http.entrypoints=web"
-      # - "traefik.http.routers.penpot-http.rule=Host(`<DOMAIN_NAME>`)"
-      # - "traefik.http.services.penpot-http.loadbalancer.server.port=80"
-
-      ## HTTPS: example of labels for the case where penpot will be exposed to the
-      ## internet with HTTPS using traefik.
-
-      # - "traefik.http.middlewares.http-redirect.redirectscheme.scheme=https"
-      # - "traefik.http.middlewares.http-redirect.redirectscheme.permanent=true"
-      # - "traefik.http.routers.penpot-http.entrypoints=web"
-      # - "traefik.http.routers.penpot-http.rule=Host(`<DOMAIN_NAME>`)"
-      # - "traefik.http.routers.penpot-http.middlewares=http-redirect"
-      # - "traefik.http.routers.penpot-https.entrypoints=websecure"
-      # - "traefik.http.routers.penpot-https.rule=Host(`<DOMAIN_NAME>`)"
-      # - "traefik.http.services.penpot-https.loadbalancer.server.port=80"
-      # - "traefik.http.routers.penpot-https.tls=true"
-      # - "traefik.http.routers.penpot-https.tls.certresolver=letsencrypt"
+      - traefik.enable=true
+      - traefik.http.routers.penpot.entrypoints=web
+      - traefik.http.routers.penpot.rule=Host(`penpot.zachtaiji.com`)
+      - traefik.http.routers.penpot.middlewares=https_redirect@docker,non_www@docker
+      - traefik.http.routers.penpot-secure.entrypoints=websecure
+      - traefik.http.routers.penpot-secure.rule=Host(`penpot.zachtaiji.com`)
+      - traefik.http.routers.penpot-secure.tls=true
+      - traefik.http.services.penpot.loadbalancer.server.port=8080
+      - traefik.http.routers.penpot-secure.tls.certresolver=myresolver
+      - traefik.docker.network=reverse-proxynet
 
     environment:
       << : [*penpot-flags, *penpot-http-body-size]
@@ -117,19 +80,23 @@ services:
   penpot-backend:
     image: "penpotapp/backend:latest"
     restart: always
+    container_name: penpot-backend
 
     volumes:
-      - penpot_assets:/opt/data/assets
+      - ./data/penpot_assets:/opt/data/assets
 
     depends_on:
       - penpot-postgres
       - penpot-redis
 
     networks:
-      - penpot
+      - reverse-proxynet
 
     ## Configuration envronment variables for the backend
     ## container.
+
+    env_file:
+      - .env
 
     environment:
       << : [*penpot-flags, *penpot-public-uri, *penpot-http-body-size]
@@ -157,8 +124,8 @@ services:
       ## postgresql connection parameters.
 
       PENPOT_DATABASE_URI: postgresql://penpot-postgres/penpot
-      PENPOT_DATABASE_USERNAME: penpot
-      PENPOT_DATABASE_PASSWORD: penpot
+      #PENPOT_DATABASE_USERNAME: penpot
+      #PENPOT_DATABASE_PASSWORD: penpot
 
       ## Redis is used for the websockets notifications. Don't touch unless the redis
       ## container has different parameters or different name.
@@ -204,8 +171,9 @@ services:
   penpot-exporter:
     image: "penpotapp/exporter:latest"
     restart: always
+    container_name: penpot-exporter
     networks:
-      - penpot
+      - reverse-proxynet
 
     environment:
       # Don't touch it; this uses an internal docker network to
@@ -218,25 +186,30 @@ services:
   penpot-postgres:
     image: "postgres:15"
     restart: always
+    container_name: penpot-postgres
     stop_signal: SIGINT
 
     volumes:
-      - penpot_postgres_v15:/var/lib/postgresql/data
+      - ./postgres/penpot_postgres_v15:/var/lib/postgresql/data
+
+    env_file:
+      - .env
 
     networks:
-      - penpot
+      - reverse-proxynet
 
     environment:
       - POSTGRES_INITDB_ARGS=--data-checksums
       - POSTGRES_DB=penpot
-      - POSTGRES_USER=penpot
-      - POSTGRES_PASSWORD=penpot
+      - POSTGRES_USER=${PENPOT_DATABASE_USERNAME}
+      - POSTGRES_PASSWORD=${PENPOT_DATABASE_PASSWORD}
 
   penpot-redis:
     image: redis:7.2
     restart: always
+    container_name: penpot-redis
     networks:
-      - penpot
+      - reverse-proxynet
 
   ## A mailcatch service, used as temporal SMTP server. You can access via HTTP to the
   ## port 1080 for read all emails the penpot platform has sent. Should be only used as a
@@ -245,12 +218,13 @@ services:
   penpot-mailcatch:
     image: sj26/mailcatcher:latest
     restart: always
+    container_name: penpot-mailcatch
     expose:
       - '1025'
     ports:
       - "1080:1080"
     networks:
-      - penpot
+      - reverse-proxynet
 
   ## Example configuration of MiniIO (S3 compatible object storage service); If you don't
   ## have preference, then just use filesystem, this is here just for the completeness.

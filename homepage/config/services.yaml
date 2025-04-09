@@ -127,7 +127,7 @@
                 password: {{HOMEPAGE_VAR_JACKETTPW}}
         - Transmission:
             icon: transmission
-            href: https://transmission.zachtaiji.com
+            href: http://192.168.1.21:9091
             description: Torrent client
             server: my-docker
             container: transmission

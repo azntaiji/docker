@@ -76,8 +76,8 @@ services:
   sonarr:
     container_name: sonarr
     image: ghcr.io/hotio/sonarr
-    #ports:
-    #  - "8989:8989"
+    ports:
+      - "8989:8989"
     environment:
       - PUID=1000
       - PGID=1000
@@ -133,6 +133,29 @@ services:
       - reverse-proxynet
     extra_hosts:
       - "host.docker.internal:host-gateway"
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    restart: 'unless-stopped'
+    volumes:
+      - ./cache:/cache:rw
+      - ./jellyfin-config:/config:rw
+      - /mnt/media-1:/media-1:rw
+      - /mnt/media-2:/media-2:rw
+      - /mnt/media-3:/media-3:rw
+    networks:
+      - reverse-proxynet
+    env_file:
+      - .env
+    ports:
+      - 8096
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.rule=Host(`movies.zachtaiji.com`)"
+      - "traefik.http.routers.jellyfin.entrypoints=websecure"
+      - "traefik.http.routers.jellyfin.tls.certresolver=myresolver"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+      - "traefik.http.routers.jellyfin.middlewares=https_redirect@docker"
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
     container_name: jellyseerr
@@ -140,8 +163,8 @@ services:
       - LOG_LEVEL=debug
       - TZ=America/Los_Angeles
       - PORT=5055 #optional
-    #ports:
-    #  - 5055:5055
+    ports:
+      - 5055:5055
     volumes:
       - ./config/jellyseerr:/app/config
     restart: unless-stopped

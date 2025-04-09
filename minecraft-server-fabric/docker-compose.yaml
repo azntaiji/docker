@@ -1,7 +1,6 @@
 services:
   minecraft-server-fabric:
     image: itzg/minecraft-server
-    restart: always
     container_name: "minecraft-server-fabric"
     #user: 1000:1000
     environment:
@@ -11,6 +10,9 @@ services:
       EULA: "TRUE"
       VERSION: "1.21"
       TYPE: "FABRIC"
+      INIT_MEMORY: "2G"
+      MAX_MEMORY: "6G"
+      JVM_XX_OPTS: "-XX:+UseG1GC"
       FABRIC_LAUNCHER_VERSION: "1.0.1"
       FABRIC_LOADER_VERSION: "0.16.9"
       DIFFICULTY: "normal"

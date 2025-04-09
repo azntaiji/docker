@@ -19,10 +19,6 @@
 # homepage config files
 homepage/config/logs
 
-# jellyfin
-jellyfin/cache/
-jellyfin/config/
-
 # mysql
 mysql/data/
 
@@ -42,7 +38,9 @@ seatable/seatable-license.txt
 teable/teable-db/
 
 # torrent stack
-torrent-stack/config
+torrent-stack/config/
+torrent-stack/cache/
+torrent-stack/jellyfin-config/
 
 # blog
 zachtaiji-blog/ghost/
