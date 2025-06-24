@@ -1,7 +1,7 @@
 ---
 services:
   seatable-server:
-    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:5.1.9}
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:5.2.7}
     restart: unless-stopped
     container_name: seatable-server
     env_file:
@@ -18,6 +18,7 @@ services:
     environment:
       - DB_HOST=mariadb
       - DB_ROOT_PASSWD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
+      #- SEATABLE_MYSQL_DB_PASSWORD=${SEATABLE_MYSQL_ROOT_PASSWORD:?Variable is not set or empty}
       - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       - SEATABLE_SERVER_PROTOCOL=${SEATABLE_SERVER_PROTOCOL:-https}
       - SEATABLE_ADMIN_EMAIL=${SEATABLE_ADMIN_EMAIL:?Variable is not set or empty}

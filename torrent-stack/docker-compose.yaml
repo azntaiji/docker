@@ -36,7 +36,7 @@ services:
       - TZ=${TZ}
     volumes:
       - ./config/transmission:/config
-      - ${ROOT_DIR}/downloads:/downloads
+      - /mnt/media-1/downloads:/downloads
       #- ./torrent-files:/watch
     #ports:
     #  - 51413:51413
@@ -56,7 +56,7 @@ services:
       - AUTO_UPDATE=true #optional
     volumes:
       - ./config/jackett:/config
-      - ${ROOT_DIR}/jackett/downloads:/downloads
+      - /mnt/media-1/jackett/downloads:/downloads
     ports:
       - 9117:9117
     restart: unless-stopped
@@ -86,9 +86,9 @@ services:
     volumes:
       - ./config/sonarr:/config
       - /mnt/media-1/tv-shows-library:/tv-shows-library-1
-      - ${ROOT_DIR}/tv-shows-library:/tv-shows-library 
+      - /mnt/media-2/tv-shows-library:/tv-shows-library 
       - /mnt/media-3/tv-shows-library-3:/tv-shows-library-3
-      - ${ROOT_DIR}/downloads/complete:/downloads/complete # Folder where downloaded transmssion files are
+      - /mnt/media-1/downloads:/downloads # Folder where downloaded transmssion files are
     networks:
       - reverse-proxynet
     labels:
@@ -116,8 +116,8 @@ services:
       - ./config/radarr:/config
       - /mnt/media-1/movies-library:/movies-library-1
       - /mnt/media-3/movies-library-3:/movies-library-3
-      - ${ROOT_DIR}/movies-library:/movies-library 
-      - ${ROOT_DIR}/downloads/complete:/downloads/complete # Folder where downloaded transmssion files are
+      - /mnt/media-2/movies-library:/movies-library 
+      - /mnt/media-1/downloads:/downloads # Folder where downloaded transmssion files are
     labels:
       - traefik.enable=true
       - traefik.http.routers.radarr.entrypoints=web

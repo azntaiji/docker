@@ -22,6 +22,9 @@ homepage/config/logs
 # mysql
 mysql/data/
 
+# metabase
+metabase/databases
+
 # letsencrypt keys
 proxy/letsencrypt/
 
@@ -33,9 +36,11 @@ seatable-compose/mysql/*
 seatable-compose/seatable-license.txt
 seatable/mysql/
 seatable/seatable-license.txt
+seatable-compose/data-backup
 
 # teable
 teable/teable-db/
+teable/teable-cache
 
 # torrent stack
 torrent-stack/config/

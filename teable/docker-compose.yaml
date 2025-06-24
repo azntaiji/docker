@@ -1,7 +1,7 @@
 services:
   teable:
     container_name: teable
-    image: ghcr.io/teableio/teable:latest
+    image: ghcr.io/teableio/teable-ee:latest
     restart: always
     env_file:
       - .env
@@ -27,8 +27,16 @@ services:
       - teable
       - reverse-proxynet
     depends_on:
-      teable-db-migrate:
-        condition: service_completed_successfully
+      teable-db:
+        condition: service_healthy
+      teable-cache:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000/health']
+      start_period: 5s
+      interval: 5s
+      timeout: 3s
+      retries: 3
   teable-db:
     container_name: teable-db
     image: postgres:15.4
@@ -58,24 +66,26 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-  teable-db-migrate:
-    image: ghcr.io/teableio/teable-db-migrate:latest
-    env_file:
-      - .env
-    container_name: teable-db-migrate
-    environment:
-      - TZ=${TIMEZONE}
-      - PRISMA_DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@teable-db:5432/${POSTGRES_DB}
+  teable-cache:
+    image: redis:7.2.4
+    container_name: teable_cache
+    restart: always
+    expose:
+      - '6379'
+    volumes:
+      - ./teable-cache:/data:rw
     networks:
       - teable
-      - reverse-proxynet
-    depends_on:
-      teable-db:
-        condition: service_healthy
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    healthcheck:
+      test: ['CMD', 'redis-cli', '--raw', 'incr', 'ping']
+      interval: 10s
+      timeout: 3s
+      retries: 3
 networks:
   teable:
-    name: teable-standalone-network
-    driver: bridge
+    name: teable-network
+    #driver: bridge
   reverse-proxynet:
     name: reverse-proxynet
     external: true
