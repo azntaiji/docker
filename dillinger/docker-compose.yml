@@ -11,8 +11,8 @@ services:
       - ./data/config:/config
     cap_add:
       - SYS_ADMIN
-    security_opt:
-      - seccomp=./pdf-export.json
+    #security_opt:
+    #  - seccomp=./pdf-export.json
     environment:
       - UID=1000
       - PGID=1000

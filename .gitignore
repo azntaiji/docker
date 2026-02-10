@@ -1,6 +1,7 @@
 # excludes
 !dillinger/*
 !minecraft-server-fabric/server.properties
+.htpasswd
 
 # data dirs
 **/data/
@@ -28,15 +29,20 @@ metabase/databases
 # letsencrypt keys
 proxy/letsencrypt/
 
+# minio
+**/minio-data/**
+
 # seafile
 seafile/mysql/
+seafile/old_confs/
+seafile/mysql-bak
 
 # seatable
 seatable-compose/mysql/*
 seatable-compose/seatable-license.txt
 seatable/mysql/
 seatable/seatable-license.txt
-seatable-compose/data-backup
+seatable-compose/**/*bak*/
 
 # teable
 teable/teable-db/
@@ -46,6 +52,18 @@ teable/teable-cache
 torrent-stack/config/
 torrent-stack/cache/
 torrent-stack/jellyfin-config/
+torrent-stack/list
 
 # blog
 zachtaiji-blog/ghost/
+
+# minecraft
+data-bak/
+
+# quartz
+testing-content/
+
+# vscode workspace
+homelab.code-workspace
+
+

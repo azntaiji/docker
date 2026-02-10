@@ -1,0 +1,175 @@
+:root {
+    --primary-active-darker: #2B343B;
+    --accent-light: #708CA9;
+    --active: #9580FF;
+    --inactive: #5A5382;
+    --active-dark: #6755C7;
+    --active-darker: #454158;
+    --dim: #a5a5a5;
+    --success: #8AFF80;
+}
+
+/* --------------
+    GLOBAL
+----------------*/
+.center {
+    h1 {
+        font-weight: 900 !important;
+        font-size: 2.375rem !important;
+    }
+
+    h2 {
+        font-weight: 600 !important;
+        font-size: 1.75rem !important;
+        text-decoration: underline 1px;
+        text-underline-offset: 1.5rem;
+        line-height: 2.625rem;
+        padding-bottom: 1.25rem;
+    }
+
+    h3 {
+        font-weight: 700 !important;
+        font-size: 1.3125rem !important;
+        line-height: 2.625rem;
+    }
+
+    h4 {
+        font-weight: 800 !important;
+        font-size: 1rem !important;
+    }
+
+    h5 {
+        font-weight: 600 !important;
+        font-size: 0.75rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.09375rem;
+    }
+
+    h6 {
+        font-weight: 000 !important;
+        font-size: 0.625rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.28125rem;
+    }
+}
+
+/* --------------
+    LIGHT MODE
+----------------*/
+
+:root[saved-theme="light"] {
+
+    /* Breadcrumbs */
+    ul.tags a,article a.internal {
+        color: var(--light);
+    }
+
+    /* Highlighted Text */
+
+    mark {
+        background-color: var(--highlight);
+        color: var(--light);
+        border-radius: 5px;
+        padding: 1px 3px;
+    }
+
+}
+
+/* --------------
+    DARK MODE
+----------------*/
+
+:root[saved-theme="dark"] {
+
+    /* Page Title */
+    h1.page-title a {
+        color: var(--active);
+    }
+
+    h1.page-title a:hover {
+        color: var(--inactive) !important;
+    }
+
+    /* Breadcrumbs */
+    div.breadcrumb-element a {
+        color: var(--active);
+    }
+
+    div.breadcrumb-element a:hover {
+        color: var(--inactive) !important;
+    }
+
+    /* Content Meta */
+    p.content-meta {
+        color: var(--inactive);
+    }
+
+    /* Tags */
+
+    a.tag-link {
+        background-color: var(--gray);
+        color: var(--light) !important;
+    }
+
+    a.internal.tag-link:hover {
+        background-color: var(--dark);
+        color: var(--light) !important;
+    }
+
+    /* Headings */
+
+    h2,h4 {
+        color: var(--inactive);
+    }
+
+    h3 {
+        color: var(--gray);
+    }
+
+    h6 {
+        color: var(--dim);
+    }
+
+    /* Strong text */
+
+    strong,em {
+        color: var(--active) !important;
+    }
+
+    /* Highlighted Text */
+
+    .text-highlight {
+        background-color: var(--gray);
+    }
+
+    /* Internal Links */
+    a.internal:hover {
+        color: var(--dark) !important;
+    }
+
+    /* Code */
+    p code {
+        background-color: var(--success) !important;
+        color: var(--active-darker) !important;
+    }
+
+    /* Explorer */
+    #explorer-content ul li>a {
+        color: var(--inactive);
+        opacity: 1;
+    }
+
+    #explorer-content ul li>a:hover {
+        color: var(--lightgray) !important;
+    }
+
+    /* TOC */
+    #toc-content ul>li>a {
+        color: var(--accent-light);
+    }
+
+    #toc-content ul>li>a.in-view {
+        opacity: 1;
+    }
+
+}

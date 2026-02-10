@@ -8,7 +8,7 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=true"
       - "--entrypoints.web.address=:80"
-      #- "--entrypoints.udp.address=:51413/udp"
+      - "--entrypoints.udp.address=:51413/udp"
       - "--entrypoints.websecure.address=:443"
       - "--entryPoints.mariadb.address=:3306"
       - "--entryPoints.mysql.address=:3307"
@@ -18,6 +18,7 @@ services:
       - "--entrypoints.teableapi.address=:3000"
       - "--entrypoints.seadoc1.address=:7070"     
       - "--entrypoints.seadoc2.address=:8888"  
+      - "--entrypoints.seadoc3.address=:6240"  
       - "--entrypoints.prowlarr.address=:9696" 
       - "--entrypoints.radarr.address=:7878" 
       - "--entrypoints.n8n.address=:5678"
@@ -26,21 +27,26 @@ services:
       - "--entrypoints.mc2.address=:19132"
       - "--entrypoints.mc3.address=:25565"
       - "--entrypoints.mc4.address=:25566"
+      - "--entrypoints.cobblemon.address=:25568"
       - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       - "--certificatesresolvers.myresolver.acme.email=zach@steelhead.design"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
     ports:
       - "80:80"
       - "443:443"
       - "5432:5432"
       #- "51413:51413/udp"
     expose:
-      - "22:22"
+      - 22
     volumes:
       - ./letsencrypt:/letsencrypt:rw
       - /var/run/docker.sock:/var/run/docker.sock
+      - /docker/postgres/auth:/auth:ro
     restart: always
     networks:
       - reverse-proxynet

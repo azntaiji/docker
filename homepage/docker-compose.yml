@@ -4,11 +4,12 @@ services:
     container_name: homepage
     env_file:
       - passwords.env
-    #environment:
+    environment:
     #  PUID: 1000 -- optional, your user id
     #  PGID: 1000 -- optional, your group id
-    ports:
-      - 3000
+      HOMEPAGE_ALLOWED_HOSTS: home.zachtaiji.com
+    #ports:
+    #  - 3000
     volumes:
       - ./config:/app/config # Make sure your local config directory exists
       - /var/run/docker.sock:/var/run/docker.sock:ro # optional, for docker integrations
@@ -18,7 +19,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.homepage.entrypoints=web
       - traefik.http.routers.homepage.rule=Host(`home.zachtaiji.com`)
-      #- traefik.http.services.homepage.loadbalancer.server.port=80
+      - traefik.http.services.homepage.loadbalancer.server.port=3000
       - traefik.http.routers.homepage.middlewares=https_redirect@docker,non_www@docker
       - traefik.http.routers.homepage-secure.entrypoints=websecure
       - traefik.http.routers.homepage-secure.rule=Host(`home.zachtaiji.com`)

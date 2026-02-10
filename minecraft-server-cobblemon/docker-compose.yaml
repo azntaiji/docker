@@ -1,0 +1,48 @@
+services:
+  minecraft-server-cobblemon:
+    image: itzg/minecraft-server
+    tty: true
+    stdin_open: true
+    container_name: "minecraft-server-cobblemon"
+    #user: 1000:1000
+    ports:
+      - "25568:25568"
+      - "8123:8123"
+    environment:
+      EULA: "TRUE"
+      TYPE: "MODRINTH"
+      MODRINTH_VERSION: "1.6.1.4"
+      MODRINTH_MODPACK: "https://modrinth.com/modpack/cobblemon-fabric"
+      MODRINTH_DEFAULT_VERSION_TYPE: "release"
+      MODRINTH_LOADER: "fabric"
+      MEMORY: "8192M"
+      MOTD: "Cobblemon"
+      USE_AIKAR_FLAGS: "true"
+      TZ: "America/Los_Angeles"
+      UID: 1000
+      GID: 1000
+      #INIT_MEMORY: "2G"
+      #MAX_MEMORY: "6G"
+      #JVM_XX_OPTS: "-XX:+UseG1GC"
+      ENABLE_COMMAND_BLOCK: "TRUE"
+      # EXEC_DIRECTLY: "TRUE"
+      # SETUP_ONLY: "TRUE"
+      # RESOURCE_PACK: "https://cdn.modrinth.com/data/1MyOrwfu/versions/BYoL3YKt/Nautilus3D-V2.2.zip"
+      SERVER_PORT: 25568
+    volumes:
+      - ./data:/data:rw
+    labels:
+        - traefik.enable=true
+        - traefik.http.routers.cobblemon.entrypoints=cobblemon
+        - traefik.http.routers.cobblemon.rule=Host(`cobblemon.zachtaiji.com`)
+        - traefik.http.services.cobblemon.loadbalancer.server.port=25568
+        - traefik.http.routers.cobblemon.middlewares=non_www@docker
+        - traefik.http.routers.cobblemon-secure.tls=true
+        - traefik.http.routers.cobblemon-secure.tls.certresolver=myresolver
+        - traefik.docker.network=reverse-proxynet
+    networks:
+      - reverse-proxynet
+networks:
+  reverse-proxynet:
+    name: reverse-proxynet
+    external: true

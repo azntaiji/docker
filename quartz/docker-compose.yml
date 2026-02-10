@@ -1,0 +1,32 @@
+services:
+  quartz:
+    image: azntaiji/quartz:4.5.2
+    restart: unless-stopped
+    container_name: quartz
+    volumes:
+      - /mnt/obsidian/Obsidian-Sync:/quartz/content:ro
+      - ./config/quartz.config.ts:/quartz/quartz.config.ts:rw
+      - ./config/quartz.layout.ts:/quartz/quartz.layout.ts:rw
+      - ./config/styles:/quartz/quartz/styles:rw
+      - ./config/components:/quartz/quartz/components:rw
+    networks:
+      - reverse-proxynet
+    command: npx quartz build --serve
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.quartz.entrypoints=web,websecure
+      - traefik.http.routers.quartz.rule=Host(`wiki.zachtaiji.com`)
+      - traefik.http.routers.quartz.tls.certresolver=myresolver
+      - traefik.http.routers.quartz.middlewares=https_redirect@docker,non_www@docker
+      - traefik.docker.network=reverse-proxynet
+      - traefik.http.services.quartz.loadbalancer.server.port=8080
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+networks:
+  reverse-proxynet:
+    name: reverse-proxynet
+    external: true

@@ -150,6 +150,15 @@
             widget:
                 type: minecraft
                 url: https://mc2.zachtaiji.com:25566
+        - Cobblemon Fabric Minecraft Server:
+            icon: minecraft.svg
+            href: https://cobblemon.zachtaiji.com:25568
+            description: Cobblemon Fabric server
+            server: my-docker
+            container: minecraft-server-cobblemon
+            widget:
+                type: minecraft
+                url: https://cobblemon.zachtaiji.com:25568
 - Other Apps:
         - VaultWarden:
             icon: si-vaultwarden-#ffffff
@@ -163,6 +172,12 @@
             description: Markdown viewer & editor
             server: my-docker
             container: dillinger
+        - Penpot:
+            icon: penpot
+            href: https://penpot.zachtaiji.com
+            description: Open source Figma alternative
+            server: my-docker
+            container: penpot
 #        - n8n:
 #            icon: n8n.svg
 #            href: https://n8n.zachtaiji.com
