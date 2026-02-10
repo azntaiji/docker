@@ -1,4 +1,3 @@
-version: "3.9"
 services: 
   nocodb: 
     container_name: nocodb
@@ -46,7 +45,7 @@ services:
   watchtower: 
     command: "--schedule \"0 5 * * *\" --cleanup --label-enable"
     container_name: watchtower
-    image: containrrr/watchtower
+    image: ghcr.io/nicholas-fedor/watchtower:latest
     labels: 
       - com.centurylinklabs.watchtower.enable=true
     networks: 
