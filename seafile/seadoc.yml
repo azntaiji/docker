@@ -21,25 +21,37 @@ services:
       - NON_ROOT=${NON_ROOT:-false}
       - SEAHUB_SERVICE_URL=${SEAFILE_SERVICE_URL:-http://seafile}
     labels:
+# Enable Traefik
       - traefik.enable=true
-      - traefik.http.routers.sdoc-server.entrypoints=web
-      - traefik.http.routers.sdoc-server.rule=Host(`sdoc-server.zachtaiji.com`)
-      - traefik.http.routers.sdoc-server.middlewares=https_redirect@docker,non_www@docker
-      - traefik.http.routers.sdoc-server-secure.entrypoints=websecure
-      - traefik.http.routers.sdoc-server-secure.rule=Host(`sdoc-server.zachtaiji.com`)
-      - traefik.http.routers.sdoc-server-secure.tls=true
-      - traefik.http.routers.sdoc-server-secure.tls.certresolver=myresolver
+
+      # HTTP router (redirect to HTTPS) — covers both paths
+      - traefik.http.routers.seadoc.entrypoints=web
+      - traefik.http.routers.seadoc.rule=Host(`files.zachtaiji.com`) && (PathPrefix(`/socket.io`) || PathPrefix(`/sdoc-server`))
+      - traefik.http.routers.seadoc.middlewares=https_redirect@docker,non_www@docker
+
+      # HTTPS router: /socket.io → seadoc:80/socket.io (path preserved as-is)
+      - traefik.http.routers.seadoc-socketio-secure.entrypoints=websecure
+      - traefik.http.routers.seadoc-socketio-secure.rule=Host(`files.zachtaiji.com`) && PathPrefix(`/socket.io`)
+      - traefik.http.routers.seadoc-socketio-secure.tls=true
+      - traefik.http.routers.seadoc-socketio-secure.tls.certresolver=myresolver
+      - traefik.http.routers.seadoc-socketio-secure.service=seadoc
+
+      # HTTPS router: /sdoc-server/foo → seadoc:80/foo (prefix stripped)
+      - traefik.http.routers.seadoc-server-secure.entrypoints=websecure
+      - traefik.http.routers.seadoc-server-secure.rule=Host(`files.zachtaiji.com`) && PathPrefix(`/sdoc-server`)
+      - traefik.http.routers.seadoc-server-secure.tls=true
+      - traefik.http.routers.seadoc-server-secure.tls.certresolver=myresolver
+      - traefik.http.routers.seadoc-server-secure.middlewares=seadoc-stripprefix
+      - traefik.http.routers.seadoc-server-secure.service=seadoc
+
+      # Middleware: strip /sdoc-server prefix
+      - traefik.http.middlewares.seadoc-stripprefix.stripprefix.prefixes=/sdoc-server
+
+      # Service: target port 80 on the seadoc container
+      - traefik.http.services.seadoc.loadbalancer.server.port=80
+
+      # Network (same as seafile)
       - traefik.docker.network=reverse-proxynet
-      #caddy: ${SEAFILE_SERVER_PROTOCOL:-http}://$#{SEAFILE_SERVER_HOSTNAME:?Variable is not set or empty}
-      #caddy.@ws.0_header: "Connection *Upgrade*"
-      #caddy.@ws.1_header: "Upgrade websocket"
-      #caddy.0_reverse_proxy: "@ws {{upstreams 80}}"
-      #caddy.1_handle_path: "/socket.io/*"
-      #caddy.1_handle_path.0_rewrite: "* /socket.io{uri}"
-      #caddy.1_handle_path.1_reverse_proxy: "{{upstreams 80}}"
-      #caddy.2_handle_path: "/sdoc-server/*"
-      #caddy.2_handle_path.0_rewrite: "* {uri}"
-      #caddy.2_handle_path.1_reverse_proxy: "{{upstreams 80}}"
     depends_on:
       seafile-db:
         condition: service_healthy

@@ -11,7 +11,7 @@ services:
     environment:
       EULA: "TRUE"
       TYPE: "MODRINTH"
-      MODRINTH_VERSION: "1.6.1.4"
+      MODRINTH_VERSION: "1.7.3"
       MODRINTH_MODPACK: "https://modrinth.com/modpack/cobblemon-fabric"
       MODRINTH_DEFAULT_VERSION_TYPE: "release"
       MODRINTH_LOADER: "fabric"

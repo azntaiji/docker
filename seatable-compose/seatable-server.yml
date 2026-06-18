@@ -1,7 +1,7 @@
 ---
 services:
   seatable-server:
-    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:6.0.10}
+    image: ${SEATABLE_IMAGE:-seatable/seatable-enterprise:6.1.8}
     restart: unless-stopped
     container_name: seatable-server
     env_file:
@@ -17,7 +17,8 @@ services:
       - 80
       - 443
     environment:
-      - SEATABLE_MYSQL_DB_HOST=mariadb
+      - SEATABLE_MYSQL_DB_HOST=${MARIADB_HOST:-mariadb}
+      - SEATABLE_MYSQL_DB_PORT=${MARIADB_PORT:-3306}
       - SEATABLE_MYSQL_DB_USER=root
       - SEATABLE_MYSQL_DB_PASSWORD=${MARIADB_PASSWORD:?Variable is not set or empty}
       - SEATABLE_MYSQL_DB_DTABLE_DB_NAME=dtable_db
@@ -26,12 +27,13 @@ services:
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=${REDIS_PORT:-6379}
       - REDIS_PASSWORD=${REDIS_PASSWORD:?Variable is not set or empty}
+      - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
       - SEATABLE_SERVER_HOSTNAME=${SEATABLE_SERVER_HOSTNAME:?Variable is not set or empty}
       - SEATABLE_SERVER_PROTOCOL=${SEATABLE_SERVER_PROTOCOL:-https}
-      - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
       - SEATABLE_ADMIN_EMAIL=${SEATABLE_ADMIN_EMAIL:?Variable is not set or empty}
       - SEATABLE_ADMIN_PASSWORD=${SEATABLE_ADMIN_PASSWORD:?Variable is not set or empty}
       - TIME_ZONE=${TIME_ZONE}
+      - ENABLE_PYTHON_SCRIPT=${ENABLE_PYTHON_SCRIPT:-false}
       - PYTHON_SCHEDULER_URL=${PYTHON_SCHEDULER_URL:-http://python-scheduler}
       - PYTHON_SCHEDULER_AUTH_TOKEN=${PYTHON_SCHEDULER_AUTH_TOKEN:-}
       - REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
@@ -48,6 +50,8 @@ services:
       - SEATABLE_ENABLE_CREATE_BASE_FROM_TEMPLATE=${SEATABLE_ENABLE_CREATE_BASE_FROM_TEMPLATE:-}
       - SEATABLE_HELP_LINK=${SEATABLE_HELP_LINK:-https://docs.seatable.io}
       - SEATABLE_LOG_LEVEL=${SEATABLE_LOG_LEVEL:-INFO}
+      - ENABLE_SEATABLE_AI=${ENABLE_SEATABLE_AI:-false}
+      - SEATABLE_AI_SERVER_URL=${SEATABLE_AI_SERVER_URL:-http://seatable-ai:8888}
     labels:
       - traefik.enable=true
       - traefik.http.routers.seatable.entrypoints=web
@@ -69,6 +73,7 @@ services:
     networks:
       - reverse-proxynet
       - backend-seatable-net
+      - frontend-net
     # healthcheck specifically for dtable-web
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8000 || exit 1"]
@@ -78,7 +83,7 @@ services:
       timeout: 10s
 
   mariadb:
-    image: ${SEATABLE_DB_IMAGE:-mariadb:11.8.3-noble}
+    image: ${SEATABLE_DB_IMAGE:-mariadb:11.8.5-noble}
     restart: unless-stopped
     container_name: mariadb
     environment:
@@ -129,7 +134,7 @@ services:
 #      timeout: 5s
 
   redis:
-    image: ${SEATABLE_REDIS_IMAGE:-redis:8.2.2-bookworm}
+    image: ${SEATABLE_REDIS_IMAGE:-redis:8.4.0-bookworm}
     restart: unless-stopped
     container_name: redis
     environment:
@@ -137,7 +142,7 @@ services:
     command:
       - /bin/sh
       - -c
-      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}" --maxmemory "${REDIS_MAX_MEMORY:-500mb}" --maxmemory-policy allkeys-lru
     networks:
       - backend-seatable-net
     healthcheck:
@@ -152,3 +157,5 @@ networks:
     external: true
   backend-seatable-net:
     name: backend-seatable-net
+  frontend-net:
+    name: frontend-net

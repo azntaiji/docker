@@ -14,12 +14,10 @@ services:
       - "--entryPoints.mysql.address=:3307"
       - "--entrypoints.seafile.address=:8000"
       - "--entrypoints.seafhttp.address=:8082"
-      - "--entrypoints.postgres.address=:5432"
-      - "--entrypoints.teableapi.address=:3000"
+      #- "--entrypoints.postgres.address=:5432" No longer publishing postgres; access through tailscale
       - "--entrypoints.seadoc1.address=:7070"     
       - "--entrypoints.seadoc2.address=:8888"  
       - "--entrypoints.seadoc3.address=:6240"  
-      - "--entrypoints.prowlarr.address=:9696" 
       - "--entrypoints.radarr.address=:7878" 
       - "--entrypoints.n8n.address=:5678"
       - "--entrypoints.jackett.address=:9117"
@@ -36,10 +34,12 @@ services:
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+      - "--providers.file.directory=/providers"
+      - "--providers.file.watch=true"
     ports:
       - "80:80"
       - "443:443"
-      - "5432:5432"
+      #- "5432:5432" No longer publishing postgres; access through tailscale
       #- "51413:51413/udp"
     expose:
       - 22
@@ -47,9 +47,9 @@ services:
       - ./letsencrypt:/letsencrypt:rw
       - /var/run/docker.sock:/var/run/docker.sock
       - /docker/postgres/auth:/auth:ro
+      - ./providers:/providers
     restart: always
-    networks:
-      - reverse-proxynet
+    networks: [reverse-proxynet, supabase_default]
     labels:
       - traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`) 
       - traefik.http.routers.http_catchall.entrypoints=web 
@@ -71,3 +71,5 @@ services:
 networks:
   reverse-proxynet:
     name: reverse-proxynet
+  supabase_default:
+      external: true

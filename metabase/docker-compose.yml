@@ -1,6 +1,6 @@
 services:
   metabase:
-    image: metabase/metabase:latest
+    image: metabase/metabase:v0.60.x
     container_name: metabase
     hostname: metabase
     volumes:
@@ -9,8 +9,8 @@ services:
     external_links:
       - mysql-db
     restart: always
-    ports:
-      - 3000
+    #ports:
+    #  - 3000
     environment:
       MB_DB_TYPE: mysql
       MB_DB_DBNAME: metabase
@@ -30,6 +30,7 @@ services:
       - traefik.http.routers.metabase.entrypoints=web
       - traefik.http.routers.metabase.rule=Host(`metabase.zachtaiji.com`)
       - traefik.http.routers.metabase.middlewares=https_redirect@docker,non_www@docker
+      - traefik.http.services.metabase.loadbalancer.server.port=3000
       - traefik.http.routers.metabase-secure.entrypoints=websecure
       - traefik.http.routers.metabase-secure.rule=Host(`metabase.zachtaiji.com`)
       - traefik.http.routers.metabase-secure.tls=true

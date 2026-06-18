@@ -3,6 +3,15 @@
 # https://gethomepage.dev/latest/configs/services
 
 - Networking:
+        - Uptime Kuma:
+            icon: uptime-kuma
+            href: https://status.zachtaiji.com
+            server: my-docker
+            container: uptime-kuma
+            widget:
+                type: uptimekuma
+                url: https://status.zachtaiji.com
+                slug: all
         - Traefik:
             icon: traefik.svg
             href: https://traefik.zachtaiji.com/dashboard/#/
@@ -22,7 +31,7 @@
             description: Domain and DNS management
         - Cockpit:
             href: https://zachtaiji.com:9090/system
-            icon: ubuntu
+            icon: linux
             description: Remote Server Admin
         - Router:
             href: http://192.168.1.1
@@ -42,30 +51,12 @@
             icon: mdi-email-arrow-right
             description: Backup SMTP and API email sending service
 - Data Science & Analytics:
-        - Seatable:
-            icon: /icons/seatable.png
-            href: https://seatable.zachtaiji.com
-            description: No-code db
+        - Metabase:
+            icon: metabase
+            href: https://metabase.zachtaiji.com
+            description: Data viz
             server: my-docker
-            container: seatable-server
-        - Nocodb:
-            icon: /icons/nocodb.svg
-            href: https://nocodb.zachtaiji.com
-            description: No-code db
-            server: my-docker
-            container: nocodb
-        - Teable:
-            icon: /icons/teable.svg
-            href: https://teable.zachtaiji.com
-            description: Postgres no-code db
-            server: my-docker
-            container: teable
-#        - Metabase:
-#            icon: metabase
-#            href: https://dashboard.zachtaiji.com
-#            description: Data viz
-#            server: my-docker
-#            container: metabase
+            container: metabase
         - Google Analytics:
             href: https://analytics.google.com/analytics/web/#/p318505188/reports/explorer?params=_u.dateOption%3Dlast90Days%26_u..nav%3Dmaui&r=4656462980&collectionId=life-cycle
             icon: google-analytics
@@ -108,7 +99,7 @@
             href: https://radarr.zachtaiji.com/
             description: Movie organizer/manager
             server: my-docker
-            container: radarr       
+            container: radarr
         - Sonarr:
             icon: sonarr
             href: https://sonarr.zachtaiji.com/
@@ -166,25 +157,43 @@
             description: Password manager
             server: my-docker
             container: vaultwarden
-        - Dillinger:
-            icon: dillinger
-            href: https://markdown.zachtaiji.com
-            description: Markdown viewer & editor
-            server: my-docker
-            container: dillinger
-        - Penpot:
-            icon: penpot
-            href: https://penpot.zachtaiji.com
-            description: Open source Figma alternative
-            server: my-docker
-            container: penpot
 #        - n8n:
 #            icon: n8n.svg
 #            href: https://n8n.zachtaiji.com
 #            description: Automations
 #            server: my-docker
 #            container: n8n
-- Websites & Databases:
+- Databases:
+        - Supabase:
+            icon: supabase
+            href: https://supabase.zachtaiji.com
+            server: my-docker
+            container: supabase-studio
+        - Seatable:
+            icon: /icons/seatable.png
+            href: https://seatable.zachtaiji.com
+            description: No-code db
+            server: my-docker
+            container: seatable-server
+        - Nocodb:
+            icon: /icons/nocodb.svg
+            href: https://nocodb.zachtaiji.com
+            description: No-code db
+            server: my-docker
+            container: nocodb
+        - Mariadb:
+            icon: mariadb.svg
+            server: my-docker
+            container: mariadb
+        - Mysql:
+            icon: mysql.svg
+            server: my-docker
+            container: mysql-db
+        - Postgres:
+            icon: postgres
+            server: my-docker
+            container: postgres
+- Websites:
         - Blog:
             icon: si-ghost
             href: https://zachtaiji.com
@@ -197,11 +206,3 @@
             description: Static fileserver
             server: my-docker
             container: static
-        - Mariadb:
-            icon: mariadb.svg
-            server: my-docker
-            container: mariadb
-        - Mysql:
-            icon: mysql.svg
-            server: my-docker
-            container: mysql-db

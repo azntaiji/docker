@@ -3,6 +3,10 @@
 !minecraft-server-fabric/server.properties
 .htpasswd
 
+# backup files
+**/*.bak*
+**/*.new-has-errors*
+
 # data dirs
 **/data/
 
@@ -19,9 +23,11 @@
 
 # homepage config files
 homepage/config/logs
+homepage/config.bak/
 
 # mysql
 mysql/data/
+mysql/data_backup*
 
 # metabase
 metabase/databases
@@ -50,6 +56,7 @@ teable/teable-cache
 
 # torrent stack
 torrent-stack/config/
+torrent-stack/config.bak/
 torrent-stack/cache/
 torrent-stack/jellyfin-config/
 torrent-stack/list
@@ -66,4 +73,18 @@ testing-content/
 # vscode workspace
 homelab.code-workspace
 
+# emby
+emby/config/**
 
+# mathesar
+mathesar/msar
+
+# supabase
+supabase/
+supabase-project/dev
+supabase-project/tests
+supabase-project/utils
+supabase-project/volumes
+
+# nocodb
+nocodb/*.dump

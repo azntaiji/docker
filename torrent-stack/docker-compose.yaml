@@ -1,7 +1,7 @@
 services:
   vpn:
     container_name: vpn
-    image: qmcgaw/gluetun:latest
+    image: qmcgaw/gluetun:backup-2026-06-14
     cap_add:
       - NET_ADMIN
     devices:

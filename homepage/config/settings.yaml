@@ -16,7 +16,7 @@ color: gray
 
 useEqualHeights: true
 
-headerStyle: clean
+headerStyle: underlined
 
 base: https://home.zachtaiji.com
 
@@ -24,47 +24,67 @@ statusStyle: "dot"
 
 quicklaunch:
   searchDescriptions: true
+  hideInternetSearch: true
   showSearchSuggestions: true
-  provider: google
+  hideVisitURL: true
+  #provider: google
 
 providers:
   openweathermap: openweathermapapikey
   weatherapi: weatherapiapikey
 
 layout:
+  Bookmark Group on First Tab:
+    tab: Main
   Arr Stack:
+    tab: Main
+    style: row
+    columns: 4
+  Databases:
+    tab: Main
     style: row
     columns: 3
   Storage:
-    style: row
-    columns: 2
-  Minecraft Servers:
-    style: row
-    columns: 2
-  Other Apps:
-    style: row
-    columns: 3
-  Data Science & Analytics:
-    style: column
-    columns: 2
-  Networking:
+    tab: Main
     style: column
     columns: 1
-  Websites & Databases:
+  Data Science & Analytics:
+    tab: Main
     style: column
+    columns: 1
+  Other Apps:
+    tab: Main
+    style: column
+    columns: 1
+  Websites:
+    tab: Main
+    style: column
+    columns: 1
+  Networking:
+    tab: Main
+    style: row
+    columns: 3
+  Minecraft Servers:
+    tab: Minecraft
+    style: row
     columns: 1
   Lists:
+    tab: Bookmarks
     style: row
-    columns: 3
+    columns: 1
   Personal Finance:
-    style: column
+    tab: Bookmarks
+    style: row
     columns: 1
   Healthcare:
-    style: column
+    tab: Bookmarks
+    style: row
     columns: 1
   Music:
-    style: column
+    tab: Bookmarks
+    style: row
     columns: 1
   Reading:
-    style: column
+    tab: Bookmarks
+    style: row
     columns: 1

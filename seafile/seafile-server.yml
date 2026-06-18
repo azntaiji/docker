@@ -3,6 +3,8 @@ services:
     image: ${SEAFILE_DB_IMAGE:-mariadb:10.11}
     container_name: seafile-db
     restart: unless-stopped
+    extra_hosts:
+      - "files.zachtaiji.com:host-gateway"
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-}
       - MYSQL_LOG_CONSOLE=true
@@ -48,7 +50,7 @@ services:
     #   - "80:80"
     volumes:
       - ${SEAFILE_VOLUME:-/opt/seafile-data}:/shared
-      - /mnt/seafile-fuse:/seafile-fuse:ro
+      # - /mnt/seafile-fuse:/seafile-fuse:ro Disabled fuse mount
     environment:
       #- INIT_SEAFILE_MYSQL_ROOT_PASSWORD=${INIT_SEAFILE_MYSQL_ROOT_PASSWORD:-}
       - SEAFILE_MYSQL_DB_HOST=${SEAFILE_MYSQL_DB_HOST:-db}
@@ -69,7 +71,7 @@ services:
       - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
       - SEAFILE_LOG_TO_STDOUT=${SEAFILE_LOG_TO_STDOUT:-false}
       - ENABLE_SEADOC=${ENABLE_SEADOC:-true}
-      - SEADOC_SERVER_URL=https://sdoc-server.zachtaiji.com/
+      - SEADOC_SERVER_URL=${SEAFILE_SERVER_PROTOCOL:-https}://${SEAFILE_SERVER_HOSTNAME:?Variable is not set or empty}/sdoc-server
       - CACHE_PROVIDER=${CACHE_PROVIDER:-redis}
       - REDIS_HOST=${REDIS_HOST:-redis}
       - REDIS_PORT=${REDIS_PORT:-6379}
@@ -96,8 +98,6 @@ services:
       - SEAFILE_AI_SECRET_KEY=${JWT_PRIVATE_KEY:?Variable is not set or empty}
       - MD_FILE_COUNT_LIMIT=${MD_FILE_COUNT_LIMIT:-100000}
     labels:
-      #caddy: ${SEAFILE_SERVER_PROTOCOL:-http}://${SEAFILE_SERVER_HOSTNAME:?Variable is not set or empty}
-      #caddy.reverse_proxy: "{{upstreams 80}}"
       - traefik.enable=true
       - traefik.http.routers.seafile.entrypoints=web
       - traefik.http.routers.seafile.rule=Host(`files.zachtaiji.com`)
