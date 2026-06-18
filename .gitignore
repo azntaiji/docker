@@ -88,3 +88,4 @@ supabase-project/volumes
 
 # nocodb
 nocodb/*.dump
+nocodb/db/
